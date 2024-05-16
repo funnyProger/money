@@ -98,6 +98,6 @@ class GridItemWidget extends StatelessWidget {
 }
 
 getTextColorByBackgroundColor(String color) {
-  return HexColor(color).computeLuminance() > 0.4
+  return HexColor(color).computeLuminance() > 0.3
       ? Colors.black : Colors.white;
 }

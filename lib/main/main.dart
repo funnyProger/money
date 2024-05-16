@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../gui/widgets/main_screen_widgets/add_forms_widgets/add_form_container_widget.dart';
-import '../gui/widgets/main_screen_widgets/main_screen_widget.dart';
+import '../gui/widgets/main_screen/add/add_widget.dart';
+import '../gui/widgets/main_screen/main_widget.dart';
+
 
 void main() {
   runApp(const Application());
@@ -16,10 +17,10 @@ class Application extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        'main': (context) => const MainScreenWidget(),
-        'add_form': (context) => const AddFormContainerWidget(),
+        'main': (context) => const MainWidget(),
+        'add_form': (context) => const AddWidget(),
       },
-      home: const MainScreenWidget()
+      home: const MainWidget()
     );
   }
 }

@@ -3,26 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import '../../../../../data/entities/category.dart';
-import '../../grid_widgets/grid_item_widget.dart';
+import '../../grid/grid_item_widget.dart';
 
-class AddCostFormWidget extends StatefulWidget {
-  const AddCostFormWidget({
+class AddCostWidget extends StatefulWidget {
+  const AddCostWidget({
     super.key,
     required this.categories,
   });
   final List<Category> categories;
 
   @override
-  State<AddCostFormWidget> createState() => _AddCostFormWidgetState();
+  State<AddCostWidget> createState() => _AddCostWidgetState();
 }
 
-class _AddCostFormWidgetState extends State<AddCostFormWidget> {
+class _AddCostWidgetState extends State<AddCostWidget> {
   int? _selectedCategory;
   final _formKey = GlobalKey<FormState>();
   final _costController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _costFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
+  Color _sliderColor = Colors.blueAccent;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _costController.dispose();
+    _descriptionController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -352,11 +360,11 @@ class _AddCostFormWidgetState extends State<AddCostFormWidget> {
               ),
               Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 20, top: 20, right: 30),
+                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
                 child:  ActionSlider.standard(
                   sliderBehavior: SliderBehavior.stretch,
                   backgroundColor: const Color.fromARGB(100, 0, 0, 0),
-                  toggleColor: Colors.blueAccent,
+                  toggleColor: _sliderColor,
                   iconAlignment: Alignment.centerRight,
                   loadingIcon: const SizedBox(
                       width: 55,
@@ -372,7 +380,12 @@ class _AddCostFormWidgetState extends State<AddCostFormWidget> {
                       )
                   ),
                   successIcon: const SizedBox(
-                      width: 55, child: Center(child: Icon(Icons.check_rounded))),
+                      width: 55, child: Center(
+                      child: Icon(
+                          Icons.check_rounded
+                      )
+                    )
+                  ),
                   icon: const SizedBox(
                       width: 55,
                       child: Center(
@@ -382,15 +395,21 @@ class _AddCostFormWidgetState extends State<AddCostFormWidget> {
                   ),
                   action: (controller) async {
                     controller.loading(); //starts loading animation
-                    await Future.delayed(const Duration(seconds: 3));
-                    controller.success(); //starts success animation
                     await Future.delayed(const Duration(seconds: 1));
+                    controller.success(); //starts success animation
+                    setState(() {
+                      _sliderColor = Colors.green;
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
+                    setState(() {
+                      _sliderColor = Colors.blueAccent;
+                    });
                     controller.reset(); //resets the slider
                   },
                   child: const Text(
                     "Добавить...",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.grey,
                     )
                   ),
                 ),

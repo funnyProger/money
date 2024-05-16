@@ -1,21 +1,18 @@
-import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
-import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_menu/pie_menu.dart';
 import '../../../data/entities/category.dart';
-import 'add_forms_widgets/add_cost_form_widgets/add_cost_form_widget.dart';
-import 'chart_widgets/circular_chart_widget.dart';
-import 'grid_widgets/grid_item_widget.dart';
+import 'chart/circular_chart_widget.dart';
+import 'grid/grid_item_widget.dart';
 
-class MainScreenWidget extends StatefulWidget {
-  const MainScreenWidget({super.key});
+class MainWidget extends StatefulWidget {
+  const MainWidget({super.key});
 
   @override
-  State<MainScreenWidget> createState() => _MainScreenWidgetState();
+  State<MainWidget> createState() => _MainWidgetState();
 }
 
-class _MainScreenWidgetState extends State<MainScreenWidget> {
+class _MainWidgetState extends State<MainWidget> {
 
   final List<Category> _categories = [
     Category(

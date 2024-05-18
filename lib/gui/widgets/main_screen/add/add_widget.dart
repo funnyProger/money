@@ -1,5 +1,6 @@
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/add/target/add_target_widget.dart';
 import 'category/add_category_widget.dart';
 import 'cost/add_cost_widget.dart';
 
@@ -117,15 +118,8 @@ class _AddWidgetState extends State<AddWidget>
                       ),
                       SingleChildScrollView(
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.only(top: 10),
-                          child: const Text(
-                            "Цели",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                        child: AddTargetWidget(
+                          categories: _dataArguments["categories"],
                         ),
                       )
                     ],

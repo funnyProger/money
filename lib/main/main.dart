@@ -16,6 +16,7 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
       routes: {
         'main': (context) => const MainWidget(),
         'add_form': (context) => const AddWidget(),

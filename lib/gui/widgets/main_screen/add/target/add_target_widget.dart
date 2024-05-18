@@ -5,30 +5,34 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 import '../../../../../data/entities/category.dart';
 import '../../grid/grid_item_widget.dart';
 
-class AddCostWidget extends StatefulWidget {
-  const AddCostWidget({
+class AddTargetWidget extends StatefulWidget {
+  const AddTargetWidget({
     super.key,
-    required this.categories,
+    required this.categories
   });
   final List<Category> categories;
 
   @override
-  State<AddCostWidget> createState() => _AddCostWidgetState();
+  State<AddTargetWidget> createState() => _AddTargetWidgetState();
 }
 
-class _AddCostWidgetState extends State<AddCostWidget> {
+class _AddTargetWidgetState extends State<AddTargetWidget> {
   int? _selectedCategory;
+  int? _selectedPriority;
   final _formKey = GlobalKey<FormState>();
-  final _costController = TextEditingController();
+  final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _costFocusNode = FocusNode();
+  final _nameFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   Color _sliderColor = Colors.blueAccent;
+  String _targetPeriod = "";
+  bool _isPeriodSelected = false;
+  List<DateTime?> _selectedPeriod = [];
 
   @override
   void dispose() {
     super.dispose();
-    _costController.dispose();
+    _nameController.dispose();
     _descriptionController.dispose();
   }
 
@@ -172,98 +176,242 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                 height: 10,
               ),
               Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(100, 0, 0, 0),
-                      borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
-                      child: TextFormField(
-                        focusNode: _costFocusNode,
-                        controller: _costController,
-                        keyboardType: TextInputType.number,
-                        cursorWidth: 2,
-                        cursorHeight: 25,
-                        cursorColor: Colors.white,
-                        autovalidateMode: AutovalidateMode.always,
-                        validator: (currentText) {
-                          if (currentText == null || currentText.isEmpty) {
-                            return null;
-                          } else {
-                            if (currentText == "") {
-                              return "Сумма не может быть пустой";
-                            } else if (currentText.contains(" ")) {
-                              return "Сумма не может содержать пробелы";
-                            } else if (currentText[0] == '0') {
-                              return "Сумма не может начинаться с нуля";
-                            } else if (checkCostTextValidation(currentText)) {
-                              return "Сумма содержит недопустимые символы";
-                            } else {
-                              return null;
-                            }
-                          }
-                        },
-                        style: const TextStyle(
-                            height: 1.27,
-                            color: Colors.white,
-                            fontSize: 20
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-                          suffixIcon: Icon(
-                            Icons.currency_ruble,
-                            size: 20,
-                            color: _costFocusNode.hasFocus ? Colors.white :
-                            (_costController.text != "" ? Colors.white : Colors.grey),
-                          ),
-                          label: const Text(
-                            "Сумма",
-                          ),
-                          labelStyle: const TextStyle(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.only(left: 5, top: 3, bottom: 7),
+                        child: const Text(
+                          "Выберите приоритет:",
+                          style: TextStyle(
                             color: Colors.grey,
-                          ),
-                          floatingLabelAlignment: FloatingLabelAlignment.start,
-                          floatingLabelStyle: MaterialStateTextStyle
-                              .resolveWith((Set<MaterialState> states) {
-                            final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
-                            _costFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
-                            return TextStyle(color: color);
+                          )
+                        )
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Row(
+                            children: List.generate(10, (index) {
+                              return Container(
+                                margin: const EdgeInsets.only(left: 3, right: 3, bottom: 1),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedPriority = index;
+                                    });
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: _selectedPriority == null ? Colors.white.withOpacity(0.25)
+                                          : (_selectedPriority == index) ? Colors.blueAccent
+                                          : Colors.white.withOpacity(0.25),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                      (index + 1).toString(),
+                                      style: TextStyle(
+                                        color: _selectedPriority == index ? Colors.white : Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: _selectedPriority == index ? FontWeight.bold : FontWeight.normal
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            })
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 5, top: 5, right: 5, bottom: 5),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.only(left: 5, top: 3, bottom: 7),
+                        child: const Text(
+                            "Выберите пероид:",
+                            style: TextStyle(
+                              color: Colors.grey,
+                            )
+                        )
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        await showDateRangePicker(
+                          context: context,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2050),
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
+                          saveText: "Сохранить",
+                          builder: (BuildContext context, Widget? child) {
+                            return Theme(
+                              data: ThemeData.dark(),
+                              child: child!,
+                            );
                           }
+                        ).then((value) {
+                          if (value != null) {
+                            setState(() {
+                              _selectedPeriod = [value.start, value.end];
+                            });
+                          }});
+
+                        if (_selectedPeriod.length > 1) {
+                          setState(() {
+                            _isPeriodSelected = true;
+                            _targetPeriod = getCurrentDate(_selectedPeriod);
+                          });
+                        }
+
+                        if (context.mounted) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          _isPeriodSelected ? _targetPeriod : "<  Выбрать период  >",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
                           ),
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.blueAccent,
-                                width: 2,
-                              )
-                          ),
-                          errorBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                                width: 2,
-                              )
-                          ),
-                          border: const OutlineInputBorder(
+                          softWrap: true,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
+                    child: TextFormField(
+                      focusNode: _nameFocusNode,
+                      controller: _nameController,
+                      keyboardType: TextInputType.text,
+                      cursorWidth: 2,
+                      cursorHeight: 25,
+                      cursorColor: Colors.white,
+                      autovalidateMode: AutovalidateMode.always,
+                      maxLength: 50,
+                      buildCounter: (BuildContext context, { int? currentLength, int? maxLength, bool? isFocused }) {
+                        return Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                                "$currentLength/$maxLength",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+
+                                )
+                            )
+                        );
+                      },
+                      validator: (currentText) {
+                        if (currentText == null || currentText.isEmpty) {
+                          return null;
+                        } else {
+                          if (currentText == "") {
+                            return "Название не может быть пустым";
+                          } else if (currentText[0] == ' ') {
+                            return "Название не может начинаться с пробела";
+                          } else if (RegExp(r'^\d+').hasMatch(currentText)) {
+                            return "Название не может начинаться с цифры";
+                          }
+                          else {
+                            return null;
+                          }
+                        }
+                      },
+                      style: const TextStyle(
+                          height: 1.27,
+                          color: Colors.white,
+                          fontSize: 20
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                        label: const Text(
+                          "Название",
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                        floatingLabelAlignment: FloatingLabelAlignment.start,
+                        floatingLabelStyle: MaterialStateTextStyle
+                            .resolveWith((Set<MaterialState> states) {
+                          final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
+                          _nameFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
+                          return TextStyle(color: color);
+                        }
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(15),
                             ),
                             borderSide: BorderSide(
-                              color: Colors.white,
+                              color: Colors.blueAccent,
                               width: 2,
+                            )
+                        ),
+                        errorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
                             ),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                              width: 2,
+                            )
+                        ),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          ),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2,
                           ),
                         ),
-                      )
-                  ),
+                      ),
+                    )
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -383,7 +531,7 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                       child: Icon(
                           Icons.check_rounded
                       )
-                    )
+                  )
                   ),
                   icon: const SizedBox(
                       width: 55,
@@ -406,13 +554,14 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                     controller.reset(); //resets the slider
                   },
                   child: const Text(
-                    "Добавить...",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    )
+                      "Добавить...",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      )
                   ),
                 ),
-              )
+              ),
+              const SizedBox(height: 88),
             ]
         ),
       ),
@@ -420,16 +569,10 @@ class _AddCostWidgetState extends State<AddCostWidget> {
   }
 }
 
-bool checkCostTextValidation(String text) {
-  List<String> validCharsList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-  List<String> textList = text.split("");
-
-  for (String char in textList) {
-    if (!validCharsList.contains(char)) {
-      return true;
-    }
+String getCurrentDate(List<DateTime?> period) {
+  if (period.length <= 1) {
+    return "Выбрать период";
+  } else {
+    return "${period[0]!.year}-${period[0]!.month}-${period[0]!.day}   -   ${period[1]!.year}-${period[1]!.month}-${period[1]!.day}";
   }
-
-  return false;
 }

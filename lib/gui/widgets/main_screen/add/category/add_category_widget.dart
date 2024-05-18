@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import '../../../../../data/entities/category.dart';
 import '../../grid/grid_item_widget.dart';
-import '../cost/add_cost_widget.dart';
 
 class AddCategoryWidget extends StatefulWidget {
   const AddCategoryWidget({

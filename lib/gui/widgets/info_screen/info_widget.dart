@@ -2,7 +2,6 @@ import 'package:animated_segmented_tab_control/animated_segmented_tab_control.da
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/statistica/statistica_widget.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/targets/targets_widget.dart';
-
 import 'costs/costs_widget.dart';
 
 class InfoWidget extends StatefulWidget {
@@ -37,8 +36,6 @@ class _InfoWidgetState extends State<InfoWidget>
         alignment: Alignment.bottomRight,
         children: [
           Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: const Color.fromARGB(255, 30, 30, 30),
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(100),
               child: Container(
@@ -80,58 +77,29 @@ class _InfoWidgetState extends State<InfoWidget>
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
               },
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                physics: const NeverScrollableScrollPhysics(),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    const CostsWidget(),
+                    const TargetsWidget(),
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: const ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                        child: SingleChildScrollView(
                             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: CostsWidget()
-                          ),
+                            child: StatisticaWidget()
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: SingleChildScrollView(
-                              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                              child: TargetsWidget()
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: SingleChildScrollView(
-                              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                              child: StatisticaWidget()
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

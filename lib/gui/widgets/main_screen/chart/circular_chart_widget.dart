@@ -20,7 +20,6 @@ class CircularChartWidget extends StatelessWidget {
           dataSource: [
             ...categories
           ],
-
           xValueMapper: (Category category, _) => category.name,
           yValueMapper: (Category category, _) => category.cost,
           dataLabelSettings: const DataLabelSettings(

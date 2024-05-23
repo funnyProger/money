@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../gui/widgets/info_screen/info_widget.dart';
 import '../gui/widgets/main_screen/add/add_widget.dart';
 import '../gui/widgets/main_screen/main_widget.dart';
 
@@ -20,6 +20,7 @@ class Application extends StatelessWidget {
       routes: {
         'main': (context) => const MainWidget(),
         'add_form': (context) => const AddWidget(),
+        'info_screen': (context) => const InfoWidget(),
       },
       home: const MainWidget()
     );

@@ -394,7 +394,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                           height: 24.0,
                           child: CircularProgressIndicator(
                               strokeWidth: 2.0,
-                              color: Colors.black
+                              color: Colors.white
                           ),
                         )
                     )
@@ -402,7 +402,8 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                 successIcon: const SizedBox(
                     width: 55, child: Center(
                     child: Icon(
-                        Icons.check_rounded
+                      Icons.check_rounded,
+                      color: Colors.black,
                     )
                 )
                 ),

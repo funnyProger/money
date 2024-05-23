@@ -19,7 +19,10 @@ class GridItemWidget extends StatelessWidget {
     return PieMenu(
       key: ValueKey(category.name),
       onPressed: () {
-        // открыть подробную информацию по категории
+        Navigator.pushNamed(
+          context, 'info_screen',
+          arguments: category,
+        );
       },
       actions: [
         PieAction(

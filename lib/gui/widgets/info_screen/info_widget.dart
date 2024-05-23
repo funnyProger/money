@@ -1,20 +1,22 @@
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_projects/gui/widgets/main_screen/add/target/add_target_widget.dart';
-import 'category/add_category_widget.dart';
-import 'cost/add_cost_widget.dart';
+import 'package:flutter_projects/gui/widgets/info_screen/statistica/statistica_widget.dart';
+import 'package:flutter_projects/gui/widgets/info_screen/targets/targets_widget.dart';
 
-class AddWidget extends StatefulWidget {
-  const AddWidget({super.key});
+import 'costs/costs_widget.dart';
+
+class InfoWidget extends StatefulWidget {
+  const InfoWidget({super.key});
 
   @override
-  State<AddWidget> createState() => _AddWidgetState();
+  State<InfoWidget> createState() {
+    return _InfoWidgetState();
+  }
 }
 
-class _AddWidgetState extends State<AddWidget>
-    with TickerProviderStateMixin {
+class _InfoWidgetState extends State<InfoWidget>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late Map<String, dynamic> _dataArguments;
 
   @override
   void initState() {
@@ -30,12 +32,6 @@ class _AddWidgetState extends State<AddWidget>
 
   @override
   Widget build(BuildContext context) {
-    _dataArguments = (
-        ModalRoute.of(context)!.settings.arguments ?? <String, dynamic>{
-          "categories": [],
-        }
-    ) as Map<String, dynamic>;
-
     return SafeArea(
       child: Stack(
         alignment: Alignment.bottomRight,
@@ -65,15 +61,15 @@ class _AddWidgetState extends State<AddWidget>
                       BorderRadius.all(Radius.circular(50))),
                   tabs: const [
                     SegmentTab(
-                      label: "Покупка",
+                      label: "Покупки",
                       backgroundColor: Color.fromARGB(100, 0, 0, 0),
                     ),
                     SegmentTab(
-                      label: "Категория",
+                      label: "Цели",
                       backgroundColor: Color.fromARGB(100, 0, 0, 0),
                     ),
                     SegmentTab(
-                      label: "Цель",
+                      label: "Статистика",
                       backgroundColor: Color.fromARGB(100, 0, 0, 0),
                     ),
                   ],
@@ -104,9 +100,7 @@ class _AddWidgetState extends State<AddWidget>
                           ),
                           child: SingleChildScrollView(
                             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddCostWidget(
-                              categories: _dataArguments["categories"],
-                            ),
+                            child: CostsWidget()
                           ),
                         ),
                       ),
@@ -118,10 +112,8 @@ class _AddWidgetState extends State<AddWidget>
                             topRight: Radius.circular(20),
                           ),
                           child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddCategoryWidget(
-                              categories: _dataArguments["categories"],
-                            ),
+                              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                              child: TargetsWidget()
                           ),
                         ),
                       ),
@@ -133,10 +125,8 @@ class _AddWidgetState extends State<AddWidget>
                             topRight: Radius.circular(20),
                           ),
                           child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddTargetWidget(
-                              categories: _dataArguments["categories"],
-                            ),
+                              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                              child: StatisticaWidget()
                           ),
                         ),
                       ),
@@ -158,13 +148,13 @@ class _AddWidgetState extends State<AddWidget>
                 borderRadius: BorderRadius.circular(100),
               ),
               child: const Icon(
-                Icons.arrow_back,
+                Icons.add,
                 color: Colors.white,
               ),
             ),
           )
         ],
-      )
+      ),
     );
   }
 }

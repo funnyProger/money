@@ -83,22 +83,10 @@ class _InfoWidgetState extends State<InfoWidget>
                 alignment: Alignment.center,
                 child: TabBarView(
                   controller: _tabController,
-                  children: [
-                    const CostsWidget(),
-                    const TargetsWidget(),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: const ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                        child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: StatisticaWidget()
-                        ),
-                      ),
-                    ),
+                  children: const [
+                    CostsWidget(),
+                    TargetsWidget(),
+                    StatisticaWidget()
                   ],
                 ),
               ),
@@ -116,7 +104,7 @@ class _InfoWidgetState extends State<InfoWidget>
                 borderRadius: BorderRadius.circular(100),
               ),
               child: const Icon(
-                Icons.add,
+                Icons.arrow_back,
                 color: Colors.white,
               ),
             ),

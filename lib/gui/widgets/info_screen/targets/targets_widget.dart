@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/targets/target_list_item_widget.dart';
 
-import '../costs/cost_list_item_widget.dart';
-
 
 class TargetsWidget extends StatefulWidget {
   const TargetsWidget({super.key});
@@ -16,8 +14,6 @@ class _TargetsWidgetState extends State<TargetsWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: NestedScrollView(
@@ -93,8 +89,15 @@ class _TargetsWidgetState extends State<TargetsWidget> {
         },
         body: ListView.builder(
           itemCount: 14,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            return const TargetListItemWidget();
+            if (index == 13) {
+              return const SizedBox(
+                height: 88,
+              );
+            } else {
+              return const TargetListItemWidget();
+            }
           },
         ),
       ),

@@ -59,7 +59,7 @@ class CostInfoWidget extends StatelessWidget {
                 "во время быстрых перекусов, и по лезно, и внусно.",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 17,
+                  fontSize: 15,
                 ),
               ),
             )

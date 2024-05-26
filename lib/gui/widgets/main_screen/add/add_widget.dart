@@ -1,5 +1,6 @@
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_widget.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/target/add_target_widget.dart';
 import 'category/add_category_widget.dart';
 import 'cost/add_cost_widget.dart';
@@ -19,7 +20,7 @@ class _AddWidgetState extends State<AddWidget>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -76,6 +77,10 @@ class _AddWidgetState extends State<AddWidget>
                       label: "Цель",
                       backgroundColor: Color.fromARGB(100, 0, 0, 0),
                     ),
+                    SegmentTab(
+                      label: "Сбережение",
+                      backgroundColor: Color.fromARGB(100, 0, 0, 0),
+                    ),
                   ],
                 ),
               ),
@@ -97,47 +102,38 @@ class _AddWidgetState extends State<AddWidget>
                     children: [
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddCostWidget(
-                              categories: _dataArguments["categories"],
-                            ),
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                          child: AddCostWidget(
+                            categories: _dataArguments["categories"],
                           ),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                          child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddCategoryWidget(
-                              categories: _dataArguments["categories"],
-                            ),
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                          child: AddCategoryWidget(
+                            categories: _dataArguments["categories"],
                           ),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                          child: AddTargetWidget(
+                            categories: _dataArguments["categories"],
                           ),
-                          child: SingleChildScrollView(
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                            child: AddTargetWidget(
-                              categories: _dataArguments["categories"],
-                            ),
-                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: AddSavingWidget(
+                          categories: _dataArguments["categories"],
                         ),
                       ),
                     ],

@@ -102,6 +102,7 @@ class _CostsWidgetState extends State<CostsWidget> {
         },
         body: ListView.builder(
           itemCount: 14,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             if (index == 13) {
               return const SizedBox(

@@ -6,9 +6,9 @@ class CostListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 50,
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 5),
+      margin: const EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
@@ -49,8 +49,7 @@ class CostListItemWidget extends StatelessWidget {
                     "852" " ₽",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

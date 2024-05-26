@@ -195,7 +195,7 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                     borderRadius: BorderRadius.circular(100),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       child: Row(
                           children: List.generate(10, (index) {
                             return Container(

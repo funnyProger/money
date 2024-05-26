@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TargetListItemWidget extends StatelessWidget {
@@ -14,7 +13,7 @@ class TargetListItemWidget extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            "cost_info_screen",
+            "target_info_screen",
           );
         },
         borderRadius: BorderRadius.circular(10),
@@ -42,7 +41,7 @@ class TargetListItemWidget extends StatelessWidget {
                                 "Купить компьютер",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: 15,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3
@@ -52,7 +51,20 @@ class TargetListItemWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(left: 8),
                             child: const Text(
-                                "Прошло дней: 82 дн.",
+                                "Прошло дней: 82/123 дн.",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 8),
+                            child: const Text(
+                                "Прогресс: 50%",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,

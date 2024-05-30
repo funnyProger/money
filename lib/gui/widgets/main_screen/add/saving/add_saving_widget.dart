@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_list_item_widget.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import '../../../../../data/entities/category.dart';
+import '../../../../../data/models/database_model.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddSavingWidget extends StatefulWidget {
-  const AddSavingWidget({
-    super.key,
-    required this.categories,
-  });
-  final List<Category> categories;
+  const AddSavingWidget({super.key});
 
   @override
   State<AddSavingWidget> createState() => _AddSavingWidgetState();
@@ -61,7 +58,7 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                         physics: const BouncingScrollPhysics(),
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.categories.length,
+                        itemCount: context.watch<DatabaseModel>().categories.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
@@ -75,8 +72,8 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                               width: 150,
                               decoration: BoxDecoration(
                                 color: (_selectedCategory == index || _selectedCategory == null)
-                                    ? HexColor(widget.categories[index].color!)
-                                    : HexColor(widget.categories[index].color!).withOpacity(0.3),
+                                    ? HexColor(context.watch<DatabaseModel>().categories[index].color)
+                                    : HexColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.3),
                                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                                 border: Border.all(
                                   color: _selectedCategory == index ? Colors.white : Colors.transparent,
@@ -91,11 +88,11 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                                       padding: const EdgeInsets.only(left: 5, right: 7),
                                       alignment: Alignment.bottomLeft,
                                       child: Text(
-                                        widget.categories[index].name,
+                                        context.watch<DatabaseModel>().categories[index].name,
                                         style: TextStyle(
                                           color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                              : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                           fontSize: 20,
                                         ),
                                         softWrap: true,
@@ -111,8 +108,8 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                                         "Потрачено: 11843 руб.",
                                         style: TextStyle(
                                           color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                              : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                           fontSize: 10,
                                         ),
                                         softWrap: true,
@@ -128,8 +125,8 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                                         "Доля от ограничения: 27%",
                                         style: TextStyle(
                                           color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                              : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                           fontSize: 10,
                                         ),
                                         softWrap: true,
@@ -161,37 +158,59 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
               alignment: Alignment.center,
               padding: const EdgeInsets.only(top: 5),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(100, 0, 0, 0),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                )
-              ),
-              child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 5),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
+                  color: Color.fromARGB(100, 0, 0, 0),
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
-                  ),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      if (index == 9) {
-                        return const Column(
-                          children: [
-                            AddSavingListItemWidget(),
-                            SizedBox(height: 88),
-                          ],
-                        );
-                      } else {
-                        return const AddSavingListItemWidget();
-                      }
-                    },
-                  ),
-                )
+                  )
+              ),
+              child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(top: 5),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    child: _selectedCategory == null ?
+                    const Center(
+                      child: Text(
+                        "Добавьте цель",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                        ),
+                        softWrap: true,
+                      ),
+                    ) :
+                    context.watch<DatabaseModel>().categories[_selectedCategory!].targets.isEmpty ?
+                    const Center(
+                      child: Text(
+                        "Пусто",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                        ),
+                        softWrap: true,
+                      ),
+                    ) :
+                    ListView.builder(
+                      itemCount: context.watch<DatabaseModel>().categories[_selectedCategory!].targets.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        if (index == context.watch<DatabaseModel>().categories[_selectedCategory!].targets.length - 1) {
+                          return Column(
+                            children: [
+                              AddSavingListItemWidget(target: context.read<DatabaseModel>().categories[_selectedCategory!].targets[index]),
+                              const SizedBox(height: 88),
+                            ],
+                          );
+                        } else {
+                          return AddSavingListItemWidget(target: context.read<DatabaseModel>().categories[_selectedCategory!].targets[index]);
+                        }
+                      },
+                    ),
+                  )
               ),
             ),
           )

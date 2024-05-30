@@ -1,11 +1,17 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../../../data/models/database_model.dart';
+import '../../../../../data/entities/saving.dart';
+import '../../../../../data/entities/target.dart';
 import '../cost/add_cost_widget.dart';
 
 class AddSavingFormWidget extends StatefulWidget {
   const AddSavingFormWidget({
     super.key,
+    required this.target,
   });
+  final Target target;
 
   @override
   State<AddSavingFormWidget> createState() => _AddSavingFormWidgetState();
@@ -26,7 +32,7 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 187,
+      height: 230,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8),
       child: Form(
@@ -174,6 +180,13 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
                       )
                   )
                   ),
+                  failureIcon: const SizedBox(
+                      width: 55, child: Center(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ))
+                  ),
                   icon: const SizedBox(
                       width: 55,
                       child: Center(
@@ -184,16 +197,48 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
                   action: (controller) async {
                     _savingFocusNode.unfocus();
                     controller.loading(); //starts loading animation
-                    await Future.delayed(const Duration(seconds: 1));
-                    controller.success(); //starts success animation
-                    setState(() {
-                      _sliderColor = Colors.green;
-                    });
-                    await Future.delayed(const Duration(seconds: 2));
-                    setState(() {
-                      _sliderColor = Colors.blueAccent;
-                    });
-                    controller.reset(); //resets the slider
+                    if (
+                    _formKey.currentState!.validate() &&
+                    _savingController.text.isNotEmpty
+                    ) {
+                      bool result = await context.read<DatabaseModel>().addSaving(
+                        Saving(
+                          price: int.parse(_savingController.text),
+                          targetId: widget.target.id,
+                        ),
+                      );
+                      if (!result) {
+                        controller.failure();
+                        setState(() {
+                          _sliderColor = Colors.red;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
+                      } else {
+                        controller.success();
+                        setState(() {
+                          _sliderColor = Colors.green;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
+                      }
+                    } else {
+                      controller.failure();
+                      setState(() {
+                        _sliderColor = Colors.red;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    }
                   },
                   child: const Text(
                       "Добавить...",

@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/data/entities/category.dart';
-import 'package:flutter_projects/data/entities/chart_entities/circular_chart_data.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../../../data/models/database_model.dart';
+import '../../../../data/entities/cost.dart';
 
 class CircularChartWidget extends StatelessWidget {
-  const CircularChartWidget({
-    super.key,
-    required this.categories
-  });
-  final List<Category> categories;
+  const CircularChartWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     return SfCircularChart(
       margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
       series: [
         DoughnutSeries<Category, String> (
           dataSource: [
-            ...categories
+            ...context.watch<DatabaseModel>().categories.where((element) => element.costs.isNotEmpty)
           ],
           xValueMapper: (Category category, _) => category.name,
-          yValueMapper: (Category category, _) => category.cost,
+          yValueMapper: (Category category, _) {
+            int result = 0;
+            for (Cost cost in category.costs) {
+              result += cost.price;
+            }
+            return result;
+          },
           dataLabelSettings: const DataLabelSettings(
-            isVisible: true
+              isVisible: true
           ),
-          pointColorMapper: (Category category, _) => HexColor(category.color!),
+          pointColorMapper: (Category category, _) => HexColor(category.color),
         )
       ],
     );

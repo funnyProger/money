@@ -2,11 +2,17 @@ import 'package:animated_segmented_tab_control/animated_segmented_tab_control.da
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_widget.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/target/add_target_widget.dart';
+import 'package:provider/provider.dart';
+import '../../../../data/models/database_model.dart';
 import 'category/add_category_widget.dart';
 import 'cost/add_cost_widget.dart';
 
 class AddWidget extends StatefulWidget {
-  const AddWidget({super.key});
+  const AddWidget({
+    super.key,
+    required this.tabIndex,
+  });
+  final int tabIndex;
 
   @override
   State<AddWidget> createState() => _AddWidgetState();
@@ -15,12 +21,12 @@ class AddWidget extends StatefulWidget {
 class _AddWidgetState extends State<AddWidget>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  late Map<String, dynamic> _dataArguments;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.index = widget.tabIndex;
   }
 
   @override
@@ -31,11 +37,6 @@ class _AddWidgetState extends State<AddWidget>
 
   @override
   Widget build(BuildContext context) {
-    _dataArguments = (
-        ModalRoute.of(context)!.settings.arguments ?? <String, dynamic>{
-          "categories": [],
-        }
-    ) as Map<String, dynamic>;
 
     return SafeArea(
       child: Stack(
@@ -100,41 +101,60 @@ class _AddWidgetState extends State<AddWidget>
                   child: TabBarView(
                     controller: _tabController,
                     children: [
+                      context.watch<DatabaseModel>().categories.isEmpty ? const Center(
+                        child: Text(
+                          "Добавьте категорию",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                          )
+                        ),
+                      ) :
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
+                        child: const SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                          child: AddCostWidget(
-                            categories: _dataArguments["categories"],
-                          ),
+                          child: AddCostWidget(),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
+                        child: const SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                          child: AddCategoryWidget(
-                            categories: _dataArguments["categories"],
-                          ),
+                          child: AddCategoryWidget(),
                         ),
                       ),
+                      context.watch<DatabaseModel>().categories.isEmpty ? const Center(
+                        child: Text(
+                          "Добавьте категорию",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                          )
+                        ),
+                      ) :
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
+                        child: const SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                          child: AddTargetWidget(
-                            categories: _dataArguments["categories"],
-                          ),
+                          child: AddTargetWidget(),
                         ),
                       ),
+                      context.watch<DatabaseModel>().categories.isEmpty ? const Center(
+                        child: Text(
+                          "Добавьте категорию",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                          )
+                        ),
+                      ) :
                       Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: AddSavingWidget(
-                          categories: _dataArguments["categories"],
-                        ),
+                        child: const AddSavingWidget(),
                       ),
                     ],
                   ),

@@ -1,16 +1,16 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import '../../../../../data/entities/category.dart';
+import '../../../../../data/models/database_model.dart';
+import '../../../../../data/entities/cost.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddCostWidget extends StatefulWidget {
   const AddCostWidget({
     super.key,
-    required this.categories,
   });
-  final List<Category> categories;
 
   @override
   State<AddCostWidget> createState() => _AddCostWidgetState();
@@ -25,12 +25,15 @@ class _AddCostWidgetState extends State<AddCostWidget> {
   final _descriptionFocusNode = FocusNode();
   Color _sliderColor = Colors.blueAccent;
 
+
   @override
   void dispose() {
     super.dispose();
     _costController.dispose();
     _descriptionController.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,7 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                           physics: const BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.categories.length,
+                          itemCount: context.watch<DatabaseModel>().categories.length,
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
@@ -90,8 +93,8 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                 width: 150,
                                 decoration: BoxDecoration(
                                   color: (_selectedCategory == index || _selectedCategory == null)
-                                      ? HexColor(widget.categories[index].color!)
-                                      : HexColor(widget.categories[index].color!).withOpacity(0.3),
+                                      ? HexColor(context.watch<DatabaseModel>().categories[index].color)
+                                      : HexColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.3),
                                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                                   border: Border.all(
                                     color: _selectedCategory == index ? Colors.white : Colors.transparent,
@@ -106,11 +109,11 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                         padding: const EdgeInsets.only(left: 5, right: 7),
                                         alignment: Alignment.bottomLeft,
                                         child: Text(
-                                          widget.categories[index].name,
+                                          context.watch<DatabaseModel>().categories[index].name,
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 20,
                                           ),
                                           softWrap: true,
@@ -126,8 +129,8 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                           "Потрачено: 11843 руб.",
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 10,
                                           ),
                                           softWrap: true,
@@ -143,8 +146,8 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                           "Доля от ограничения: 27%",
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 10,
                                           ),
                                           softWrap: true,
@@ -169,98 +172,98 @@ class _AddCostWidgetState extends State<AddCostWidget> {
               height: 10,
             ),
             Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(100, 0, 0, 0),
-                    borderRadius: BorderRadius.circular(20)
-                ),
-                child: Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
-                    child: TextFormField(
-                      focusNode: _costFocusNode,
-                      controller: _costController,
-                      keyboardType: TextInputType.number,
-                      cursorWidth: 2,
-                      cursorHeight: 25,
-                      cursorColor: Colors.white,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (currentText) {
-                        if (currentText == null || currentText.isEmpty) {
-                          return null;
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(100, 0, 0, 0),
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              child: Container(
+                  alignment: Alignment.topLeft,
+                  padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
+                  child: TextFormField(
+                    focusNode: _costFocusNode,
+                    controller: _costController,
+                    keyboardType: TextInputType.number,
+                    cursorWidth: 2,
+                    cursorHeight: 25,
+                    cursorColor: Colors.white,
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (currentText) {
+                      if (currentText == null || currentText.isEmpty) {
+                        return null;
+                      } else {
+                        if (currentText == "") {
+                          return "Сумма не может быть пустой";
+                        } else if (currentText.contains(" ")) {
+                          return "Сумма не может содержать пробелы";
+                        } else if (currentText[0] == '0') {
+                          return "Сумма не может начинаться с нуля";
+                        } else if (checkCostTextValidation(currentText)) {
+                          return "Сумма содержит недопустимые символы";
                         } else {
-                          if (currentText == "") {
-                            return "Сумма не может быть пустой";
-                          } else if (currentText.contains(" ")) {
-                            return "Сумма не может содержать пробелы";
-                          } else if (currentText[0] == '0') {
-                            return "Сумма не может начинаться с нуля";
-                          } else if (checkCostTextValidation(currentText)) {
-                            return "Сумма содержит недопустимые символы";
-                          } else {
-                            return null;
-                          }
+                          return null;
                         }
-                      },
-                      style: const TextStyle(
-                          height: 1.27,
-                          color: Colors.white,
-                          fontSize: 20
+                      }
+                    },
+                    style: const TextStyle(
+                        height: 1.27,
+                        color: Colors.white,
+                        fontSize: 20
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                      suffixIcon: Icon(
+                        Icons.currency_ruble,
+                        size: 20,
+                        color: _costFocusNode.hasFocus ? Colors.white :
+                        (_costController.text != "" ? Colors.white : Colors.grey),
                       ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-                        suffixIcon: Icon(
-                          Icons.currency_ruble,
-                          size: 20,
-                          color: _costFocusNode.hasFocus ? Colors.white :
-                          (_costController.text != "" ? Colors.white : Colors.grey),
-                        ),
-                        label: const Text(
-                          "Сумма",
-                        ),
-                        labelStyle: const TextStyle(
-                          color: Colors.grey,
-                        ),
-                        floatingLabelAlignment: FloatingLabelAlignment.start,
-                        floatingLabelStyle: MaterialStateTextStyle
-                            .resolveWith((Set<MaterialState> states) {
-                          final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
-                          _costFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
-                          return TextStyle(color: color);
-                        }
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.blueAccent,
-                              width: 2,
-                            )
-                        ),
-                        errorBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.red,
-                              width: 2,
-                            )
-                        ),
-                        border: const OutlineInputBorder(
+                      label: const Text(
+                        "Сумма",
+                      ),
+                      labelStyle: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                      floatingLabelAlignment: FloatingLabelAlignment.start,
+                      floatingLabelStyle: MaterialStateTextStyle
+                          .resolveWith((Set<MaterialState> states) {
+                        final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
+                        _costFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
+                        return TextStyle(color: color);
+                      }
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(15),
                           ),
                           borderSide: BorderSide(
-                            color: Colors.white,
+                            color: Colors.blueAccent,
                             width: 2,
+                          )
+                      ),
+                      errorBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
                           ),
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          )
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                        borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 2,
                         ),
                       ),
-                    )
-                ),
+                    ),
+                  )
+              ),
             ),
             const SizedBox(
               height: 5,
@@ -381,7 +384,14 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                       Icons.check_rounded,
                       color: Colors.black,
                     )
-                  )
+                )
+                ),
+                failureIcon: const SizedBox(
+                    width: 55, child: Center(
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.black,
+                    ))
                 ),
                 icon: const SizedBox(
                     width: 55,
@@ -392,22 +402,61 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                 ),
                 action: (controller) async {
                   controller.loading(); //starts loading animation
-                  await Future.delayed(const Duration(seconds: 1));
-                  controller.success(); //starts success animation
-                  setState(() {
-                    _sliderColor = Colors.green;
-                  });
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() {
-                    _sliderColor = Colors.blueAccent;
-                  });
-                  controller.reset(); //resets the slider
+                  if (
+                  _formKey.currentState!.validate() &&
+                  _descriptionController.text.isNotEmpty &&
+                  _costController.text.isNotEmpty &&
+                  _selectedCategory != null
+                  ) {
+                    bool result = await context.read<DatabaseModel>().addCost(
+                      Cost(
+                        price: int.parse(_costController.text),
+                        description: _descriptionController.text,
+                        categoryId: context.read<DatabaseModel>().categories[_selectedCategory!].id,
+                      ),
+                    );
+                    if (!result) {
+                      controller.failure();
+                      if (mounted) {
+                        setState(() {
+                          _sliderColor = Colors.red;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
+                      } else {
+                        controller.success();
+                        setState(() {
+                          _sliderColor = Colors.green;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
+                      }
+                    }
+                  } else {
+                    if (mounted) {
+                      controller.failure();
+                      setState(() {
+                        _sliderColor = Colors.red;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    }
+                  }
                 },
                 child: const Text(
-                  "Добавить...",
-                  style: TextStyle(
-                    color: Colors.grey,
-                  )
+                    "Добавить...",
+                    style: TextStyle(
+                      color: Colors.grey,
+                    )
                 ),
               ),
             )

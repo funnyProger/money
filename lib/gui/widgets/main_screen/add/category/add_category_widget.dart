@@ -1,15 +1,14 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
-import '../../../../../data/entities/category.dart';
+import 'package:flutter_projects/data/entities/category.dart';
+import 'package:provider/provider.dart';
+import '../../../../../data/models/database_model.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddCategoryWidget extends StatefulWidget {
-  const AddCategoryWidget({
-    super.key,
-    required this.categories,
-  });
-  final List<Category> categories;
+  const AddCategoryWidget({super.key,});
 
   @override
   State<AddCategoryWidget> createState() => _AddCategoryWidgetState();
@@ -71,7 +70,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  // TODO добавить действие при нажатии на категорию
+                                  // Может быть потом добавлю какое-то действие при нажатии на категорию
                                 });
                                 FocusScope.of(context).unfocus();
                               },
@@ -404,8 +403,14 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                     child: Icon(
                       Icons.check_rounded,
                       color: Colors.black,
-                    )
-                )
+                    ))
+                ),
+                failureIcon: const SizedBox(
+                    width: 55, child: Center(
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.black,
+                    ))
                 ),
                 icon: const SizedBox(
                     width: 55,
@@ -416,16 +421,50 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                 ),
                 action: (controller) async {
                   controller.loading(); //starts loading animation
-                  await Future.delayed(const Duration(seconds: 1));
-                  controller.success(); //starts success animation
-                  setState(() {
-                    _sliderColor = Colors.green;
-                  });
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() {
-                    _sliderColor = Colors.blueAccent;
-                  });
-                  controller.reset(); //resets the slider
+                  if (
+                  _formKey.currentState!.validate() &&
+                  _nameController.text.isNotEmpty &&
+                  _descriptionController.text.isNotEmpty
+                  ) {
+                    bool result = await context.read<DatabaseModel>().addCategory(
+                      Category(
+                        name: _nameController.text,
+                        description: _descriptionController.text,
+                        color: _currentColor.toHexString(),
+                      ),
+                    );
+                    if (!result) {
+                      controller.failure();
+                      setState(() {
+                        _sliderColor = Colors.red;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    } else {
+                      controller.success();
+                      setState(() {
+                        _sliderColor = Colors.green;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    }
+                  } else {
+                    controller.failure();
+                    setState(() {
+                      _sliderColor = Colors.red;
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
+                    setState(() {
+                      _sliderColor = Colors.blueAccent;
+                    });
+                    controller.reset();
+                  }
                 },
                 child: const Text(
                     "Добавить...",

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_form_widget.dart';
 
+import '../../../../../data/entities/target.dart';
+
 class AddSavingListItemWidget extends StatelessWidget {
-  const AddSavingListItemWidget({super.key});
+  const AddSavingListItemWidget({
+    super.key,
+    required this.target,
+  });
+  final Target target;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +21,9 @@ class AddSavingListItemWidget extends StatelessWidget {
           return showDialog(
             context: context,
             builder: (context) {
-              return const Dialog(
+              return Dialog(
                 backgroundColor: Colors.black,
-                child: AddSavingFormWidget()
+                child: AddSavingFormWidget(target: target)
               );
             },
           );
@@ -43,9 +49,9 @@ class AddSavingListItemWidget extends StatelessWidget {
                             Container(
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
-                              child: const Text(
-                                  "Купить компьютер",
-                                  style: TextStyle(
+                              child: Text(
+                                  target.name,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 15,
                                   ),
@@ -56,9 +62,9 @@ class AddSavingListItemWidget extends StatelessWidget {
                             Container(
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
-                              child: const Text(
-                                  "Прошло дней: 82/123 дн.",
-                                  style: TextStyle(
+                              child: Text(
+                                  "Прошло дней: ${DateTime.parse(target.firstDate).day}/${DateTime.parse(target.lastDate).day} дн.",
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                   ),
@@ -69,9 +75,9 @@ class AddSavingListItemWidget extends StatelessWidget {
                             Container(
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
-                              child: const Text(
-                                  "Прогресс: 50%",
-                                  style: TextStyle(
+                              child: Text(
+                                  "Прогресс: ${target.progress}%",
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                   ),
@@ -87,11 +93,11 @@ class AddSavingListItemWidget extends StatelessWidget {
                       child: Container(
                           alignment: Alignment.topRight,
                           padding: const EdgeInsets.only(right: 8),
-                          child: const Column(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Накоплено: ",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -102,8 +108,8 @@ class AddSavingListItemWidget extends StatelessWidget {
                                 maxLines: 1,
                               ),
                               Text(
-                                "30000" " ₽",
-                                style: TextStyle(
+                                "${getSum(target)} ₽",
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
                                 ),
@@ -132,4 +138,12 @@ class AddSavingListItemWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+int getSum(Target target) {
+  int sum = 0;
+  for (var saving in target.savings) {
+    sum += saving.price;
+  }
+  return sum;
 }

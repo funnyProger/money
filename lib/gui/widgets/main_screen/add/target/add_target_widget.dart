@@ -1,16 +1,14 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/data/entities/target.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import '../../../../../data/entities/category.dart';
+import '../../../../../data/models/database_model.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddTargetWidget extends StatefulWidget {
-  const AddTargetWidget({
-    super.key,
-    required this.categories
-  });
-  final List<Category> categories;
+  const AddTargetWidget({super.key});
 
   @override
   State<AddTargetWidget> createState() => _AddTargetWidgetState();
@@ -27,7 +25,7 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
   Color _sliderColor = Colors.blueAccent;
   String _targetPeriod = "";
   bool _isPeriodSelected = false;
-  List<DateTime?> _selectedPeriod = [];
+  List<DateTime?>? _selectedPeriod;
 
   @override
   void dispose() {
@@ -80,7 +78,7 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                           physics: const BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.categories.length,
+                          itemCount: context.watch<DatabaseModel>().categories.length,
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
@@ -94,8 +92,8 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                                 width: 150,
                                 decoration: BoxDecoration(
                                   color: (_selectedCategory == index || _selectedCategory == null)
-                                      ? HexColor(widget.categories[index].color!)
-                                      : HexColor(widget.categories[index].color!).withOpacity(0.3),
+                                      ? HexColor(context.watch<DatabaseModel>().categories[index].color)
+                                      : HexColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.3),
                                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                                   border: Border.all(
                                     color: _selectedCategory == index ? Colors.white : Colors.transparent,
@@ -110,11 +108,11 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                                         padding: const EdgeInsets.only(left: 5, right: 7),
                                         alignment: Alignment.bottomLeft,
                                         child: Text(
-                                          widget.categories[index].name,
+                                          context.watch<DatabaseModel>().categories[index].name,
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 20,
                                           ),
                                           softWrap: true,
@@ -130,8 +128,8 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                                           "Потрачено: 11843 руб.",
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 10,
                                           ),
                                           softWrap: true,
@@ -147,8 +145,8 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                                           "Доля от ограничения: 27%",
                                           style: TextStyle(
                                             color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(widget.categories[index].color!)
-                                                : getTextColorByBackgroundColor(widget.categories[index].color!).withOpacity(0.6),
+                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
+                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
                                             fontSize: 10,
                                           ),
                                           softWrap: true,
@@ -278,291 +276,338 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                           });
                         }});
 
-                      if (_selectedPeriod.length > 1) {
-                        setState(() {
-                          _isPeriodSelected = true;
-                          _targetPeriod = getCurrentDate(_selectedPeriod);
-                        });
-                      }
+                        if (_selectedPeriod!.length > 1) {
+                          setState(() {
+                            _isPeriodSelected = true;
+                            _targetPeriod = getCurrentDate(_selectedPeriod!);
+                          });
+                        }
 
-                      if (context.mounted) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(100),
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-                      alignment: Alignment.center,
-                      child: Text(
-                        _isPeriodSelected ? _targetPeriod : "<  Выбрать период  >",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                        if (context.mounted) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          _isPeriodSelected ? _targetPeriod : "<  Выбрать период  >",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                          softWrap: true,
+                          textAlign: TextAlign.center,
                         ),
-                        softWrap: true,
-                        textAlign: TextAlign.center,
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(100, 0, 0, 0),
-                  borderRadius: BorderRadius.circular(20)
+              const SizedBox(
+                height: 10,
               ),
-              child: Container(
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
-                  child: TextFormField(
-                    focusNode: _nameFocusNode,
-                    controller: _nameController,
-                    keyboardType: TextInputType.text,
-                    cursorWidth: 2,
-                    cursorHeight: 25,
-                    cursorColor: Colors.white,
-                    autovalidateMode: AutovalidateMode.always,
-                    maxLength: 50,
-                    buildCounter: (BuildContext context, { int? currentLength, int? maxLength, bool? isFocused }) {
-                      return Container(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                              "$currentLength/$maxLength",
-                              style: const TextStyle(
-                                color: Colors.grey,
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
+                    child: TextFormField(
+                      focusNode: _nameFocusNode,
+                      controller: _nameController,
+                      keyboardType: TextInputType.text,
+                      cursorWidth: 2,
+                      cursorHeight: 25,
+                      cursorColor: Colors.white,
+                      autovalidateMode: AutovalidateMode.always,
+                      maxLength: 50,
+                      buildCounter: (BuildContext context, { int? currentLength, int? maxLength, bool? isFocused }) {
+                        return Container(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                                "$currentLength/$maxLength",
+                                style: const TextStyle(
+                                  color: Colors.grey,
 
-                              )
+                                )
+                            )
+                        );
+                      },
+                      validator: (currentText) {
+                        if (currentText == null || currentText.isEmpty) {
+                          return null;
+                        } else {
+                          if (currentText == "") {
+                            return "Название не может быть пустым";
+                          } else if (currentText[0] == ' ') {
+                            return "Название не может начинаться с пробела";
+                          } else if (RegExp(r'^\d+').hasMatch(currentText)) {
+                            return "Название не может начинаться с цифры";
+                          }
+                          else {
+                            return null;
+                          }
+                        }
+                      },
+                      style: const TextStyle(
+                          height: 1.27,
+                          color: Colors.white,
+                          fontSize: 20
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                        label: const Text(
+                          "Название",
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                        floatingLabelAlignment: FloatingLabelAlignment.start,
+                        floatingLabelStyle: MaterialStateTextStyle
+                            .resolveWith((Set<MaterialState> states) {
+                          final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
+                          _nameFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
+                          return TextStyle(color: color);
+                        }
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 2,
+                            )
+                        ),
+                        errorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                              width: 2,
+                            )
+                        ),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          ),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(100, 0, 0, 0),
+                    borderRadius: BorderRadius.circular(20)
+                ),
+                child: Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
+                    child: TextFormField(
+                      focusNode: _descriptionFocusNode,
+                      controller: _descriptionController,
+                      keyboardType: TextInputType.multiline,
+                      cursorWidth: 2,
+                      cursorHeight: 25,
+                      maxLines: 10,
+                      cursorColor: Colors.white,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (currentText) {
+                        if (currentText == null || currentText.isEmpty) {
+                          return null;
+                        } else {
+                          if (currentText == "") {
+                            return "Описание не может быть пустым";
+                          } else if (currentText[0] == ' ') {
+                            return "Описание не может начинаться с пробела";
+                          } else if (RegExp(r'^\d+').hasMatch(currentText)) {
+                            return "Описание не может начинаться с цифры";
+                          }
+                          else {
+                            return null;
+                          }
+                        }
+                      },
+                      style: const TextStyle(
+                          height: 1.27,
+                          color: Colors.white,
+                          fontSize: 20
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
+                        label: const Text(
+                          "Описание",
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                        alignLabelWithHint: true,
+                        floatingLabelAlignment: FloatingLabelAlignment.start,
+                        floatingLabelStyle: MaterialStateTextStyle
+                            .resolveWith((Set<MaterialState> states) {
+                          final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
+                          _descriptionFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
+                          return TextStyle(color: color);
+                        }
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.blueAccent,
+                              width: 2,
+                            )
+                        ),
+                        errorBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                              width: 2,
+                            )
+                        ),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
+                          ),
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    )
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                child:  ActionSlider.standard(
+                  sliderBehavior: SliderBehavior.stretch,
+                  backgroundColor: const Color.fromARGB(100, 0, 0, 0),
+                  toggleColor: _sliderColor,
+                  iconAlignment: Alignment.centerRight,
+                  loadingIcon: const SizedBox(
+                      width: 55,
+                      child: Center(
+                          child: SizedBox(
+                            width: 24.0,
+                            height: 24.0,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                color: Colors.white
+                            ),
                           )
+                      )
+                  ),
+                  successIcon: const SizedBox(
+                      width: 55, child: Center(
+                      child: Icon(
+                        Icons.check_rounded,
+                        color: Colors.black,
+                      )
+                  )
+                  ),
+                  failureIcon: const SizedBox(
+                      width: 55, child: Center(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ))
+                  ),
+                  icon: const SizedBox(
+                      width: 55,
+                      child: Center(
+                          child: Icon(
+                              Icons.arrow_forward_ios)
+                      )
+                  ),
+                  action: (controller) async {
+                    controller.loading(); //starts loading animation
+                    if (
+                    _formKey.currentState!.validate() &&
+                    _selectedCategory != null &&
+                    _selectedPriority != null &&
+                    _selectedPeriod != null &&
+                    _nameController.text.isNotEmpty &&
+                    _descriptionController.text.isNotEmpty
+                    ) {
+                      bool result = await context.read<DatabaseModel>().addTarget(
+                        Target(
+                          name: _nameController.text,
+                          description: _descriptionController.text,
+                          priority: _selectedPriority!,
+                          firstDate: _selectedPeriod![0].toString(),
+                          lastDate: _selectedPeriod![1].toString(),
+                          categoryId: context.read<DatabaseModel>().categories[_selectedCategory!].id,
+                        ),
                       );
-                    },
-                    validator: (currentText) {
-                      if (currentText == null || currentText.isEmpty) {
-                        return null;
+                      if (!result) {
+                        controller.failure();
+                        setState(() {
+                          _sliderColor = Colors.red;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
                       } else {
-                        if (currentText == "") {
-                          return "Название не может быть пустым";
-                        } else if (currentText[0] == ' ') {
-                          return "Название не может начинаться с пробела";
-                        } else if (RegExp(r'^\d+').hasMatch(currentText)) {
-                          return "Название не может начинаться с цифры";
-                        }
-                        else {
-                          return null;
-                        }
+                        controller.success();
+                        setState(() {
+                          _sliderColor = Colors.green;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        setState(() {
+                          _sliderColor = Colors.blueAccent;
+                        });
+                        controller.reset();
                       }
-                    },
-                    style: const TextStyle(
-                        height: 1.27,
-                        color: Colors.white,
-                        fontSize: 20
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-                      label: const Text(
-                        "Название",
-                      ),
-                      labelStyle: const TextStyle(
+                    } else {
+                      controller.failure();
+                      setState(() {
+                        _sliderColor = Colors.red;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    }
+                  },
+                  child: const Text(
+                      "Добавить...",
+                      style: TextStyle(
                         color: Colors.grey,
-                      ),
-                      floatingLabelAlignment: FloatingLabelAlignment.start,
-                      floatingLabelStyle: MaterialStateTextStyle
-                          .resolveWith((Set<MaterialState> states) {
-                        final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
-                        _nameFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
-                        return TextStyle(color: color);
-                      }
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 2,
-                          )
-                      ),
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 2,
-                          )
-                      ),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  )
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(left: 3, top: 5, right: 3, bottom: 3),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(100, 0, 0, 0),
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              child: Container(
-                  alignment: Alignment.topLeft,
-                  padding: const EdgeInsets.only(left: 3, top: 3, right: 3, bottom: 5),
-                  child: TextFormField(
-                    focusNode: _descriptionFocusNode,
-                    controller: _descriptionController,
-                    keyboardType: TextInputType.multiline,
-                    cursorWidth: 2,
-                    cursorHeight: 25,
-                    maxLines: 10,
-                    cursorColor: Colors.white,
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (currentText) {
-                      if (currentText == null || currentText.isEmpty) {
-                        return null;
-                      } else {
-                        if (currentText == "") {
-                          return "Описание не может быть пустым";
-                        } else if (currentText[0] == ' ') {
-                          return "Описание не может начинаться с пробела";
-                        } else if (RegExp(r'^\d+').hasMatch(currentText)) {
-                          return "Описание не может начинаться с цифры";
-                        }
-                        else {
-                          return null;
-                        }
-                      }
-                    },
-                    style: const TextStyle(
-                        height: 1.27,
-                        color: Colors.white,
-                        fontSize: 20
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 10),
-                      label: const Text(
-                        "Описание",
-                      ),
-                      labelStyle: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                      alignLabelWithHint: true,
-                      floatingLabelAlignment: FloatingLabelAlignment.start,
-                      floatingLabelStyle: MaterialStateTextStyle
-                          .resolveWith((Set<MaterialState> states) {
-                        final Color color = states.contains(MaterialState.error) ? Theme.of(context).colorScheme.error :
-                        _descriptionFocusNode.hasFocus ? Colors.blueAccent : Colors.grey;
-                        return TextStyle(color: color);
-                      }
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.blueAccent,
-                            width: 2,
-                          )
-                      ),
-                      errorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 2,
-                          )
-                      ),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  )
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-              child:  ActionSlider.standard(
-                sliderBehavior: SliderBehavior.stretch,
-                backgroundColor: const Color.fromARGB(100, 0, 0, 0),
-                toggleColor: _sliderColor,
-                iconAlignment: Alignment.centerRight,
-                loadingIcon: const SizedBox(
-                    width: 55,
-                    child: Center(
-                        child: SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              color: Colors.white
-                          ),
-                        )
-                    )
-                ),
-                successIcon: const SizedBox(
-                    width: 55, child: Center(
-                    child: Icon(
-                      Icons.check_rounded,
-                      color: Colors.black,
-                    )
-                )
-                ),
-                icon: const SizedBox(
-                    width: 55,
-                    child: Center(
-                        child: Icon(
-                            Icons.arrow_forward_ios)
-                    )
-                ),
-                action: (controller) async {
-                  controller.loading(); //starts loading animation
-                  await Future.delayed(const Duration(seconds: 1));
-                  controller.success(); //starts success animation
-                  setState(() {
-                    _sliderColor = Colors.green;
-                  });
-                  await Future.delayed(const Duration(seconds: 2));
-                  setState(() {
-                    _sliderColor = Colors.blueAccent;
-                  });
-                  controller.reset(); //resets the slider
-                },
-                child: const Text(
-                    "Добавить...",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    )
+                      )
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 88),
-          ]
-      ),
-    );
+              const SizedBox(height: 88),
+            ]
+        ),
+      );
   }
 }
 

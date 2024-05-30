@@ -43,7 +43,7 @@ class GridItemWidget extends StatelessWidget {
         height: 200,
         width: 200,
         decoration: BoxDecoration(
-          color: HexColor(category.color!),
+          color: HexColor(category.color),
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Column(
@@ -56,7 +56,7 @@ class GridItemWidget extends StatelessWidget {
                 child: Text(
                   category.name,
                   style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color!),
+                    color: getTextColorByBackgroundColor(category.color),
                     fontSize: 25,
                   ),
                   softWrap: true,
@@ -71,7 +71,7 @@ class GridItemWidget extends StatelessWidget {
                 child: Text(
                   "Потрачено: 11843 руб.",
                   style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color!),
+                    color: getTextColorByBackgroundColor(category.color),
                     fontSize: 13,
                   ),
                   softWrap: true,
@@ -86,7 +86,7 @@ class GridItemWidget extends StatelessWidget {
                 child: Text(
                   "Доля от ограничения: 27%",
                   style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color!),
+                    color: getTextColorByBackgroundColor(category.color),
                     fontSize: 13,
                   ),
                   softWrap: true,

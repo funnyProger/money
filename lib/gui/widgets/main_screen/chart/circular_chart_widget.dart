@@ -3,7 +3,7 @@ import 'package:flutter_projects/data/entities/category.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../../data/models/database_model.dart';
+import '../../../../data/models/database/database_model.dart';
 import '../../../../data/entities/cost.dart';
 
 class CircularChartWidget extends StatelessWidget {

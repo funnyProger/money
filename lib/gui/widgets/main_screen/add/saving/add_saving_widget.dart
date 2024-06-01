@@ -3,7 +3,8 @@ import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_l
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import '../../../../../data/models/database_model.dart';
+import '../../../../../data/entities/category.dart';
+import '../../../../../data/models/database/database_model.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddSavingWidget extends StatefulWidget {
@@ -18,6 +19,8 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<Category> categories = context.watch<DatabaseModel>().categories;
+
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +61,7 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                         physics: const BouncingScrollPhysics(),
                         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                         scrollDirection: Axis.horizontal,
-                        itemCount: context.watch<DatabaseModel>().categories.length,
+                        itemCount: categories.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
@@ -72,8 +75,8 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                               width: 150,
                               decoration: BoxDecoration(
                                 color: (_selectedCategory == index || _selectedCategory == null)
-                                    ? HexColor(context.watch<DatabaseModel>().categories[index].color)
-                                    : HexColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.3),
+                                    ? HexColor(categories[index].color)
+                                    : HexColor(categories[index].color).withOpacity(0.3),
                                 borderRadius: const BorderRadius.all(Radius.circular(20)),
                                 border: Border.all(
                                   color: _selectedCategory == index ? Colors.white : Colors.transparent,
@@ -82,57 +85,90 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                               ),
                               child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 30,
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 5, right: 7),
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        context.watch<DatabaseModel>().categories[index].name,
-                                        style: TextStyle(
-                                          color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                          fontSize: 20,
+                                  Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 6, right: 6, top: 3),
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          categories[index].name,
+                                          style: TextStyle(
+                                            color: (_selectedCategory == index || _selectedCategory == null)
+                                                ? getTextColorByBackgroundColor(categories[index].color)
+                                                : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                            fontSize: 20,
+                                          ),
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        softWrap: true,
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 7, right: 7),
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        "Потрачено: 11843 руб.",
-                                        style: TextStyle(
-                                          color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                          fontSize: 10,
+                                      categories[index].targets.isEmpty ?
+                                      Container() :
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 6, right: 6),
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text(
+                                          "Цели: ${categories[index].targets.length}",
+                                          style: TextStyle(
+                                            color: (_selectedCategory == index || _selectedCategory == null)
+                                                ? getTextColorByBackgroundColor(categories[index].color)
+                                                : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                            fontSize: 10,
+                                          ),
+                                          softWrap: true,
                                         ),
-                                        softWrap: true,
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 7,
-                                    child: Container(
-                                      padding: const EdgeInsets.only(left: 7, right: 7),
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Доля от ограничения: 27%",
-                                        style: TextStyle(
-                                          color: (_selectedCategory == index || _selectedCategory == null)
-                                              ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                              : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                          fontSize: 10,
-                                        ),
-                                        softWrap: true,
-                                      ),
-                                    ),
-                                  ),
+                                      categories[index].costs.isEmpty ?
+                                      Container() :
+                                      Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.only(left: 6, right: 6),
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              "Покупки: ${categories[index].costs.length}",
+                                              style: TextStyle(
+                                                color: (_selectedCategory == index || _selectedCategory == null)
+                                                    ? getTextColorByBackgroundColor(categories[index].color)
+                                                    : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                fontSize: 10,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(left: 6, right: 6),
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              "Потрачено: ${getCostsSum(categories[index].costs)} руб.",
+                                              style: TextStyle(
+                                                color: (_selectedCategory == index || _selectedCategory == null)
+                                                    ? getTextColorByBackgroundColor(categories[index].color)
+                                                    : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                fontSize: 10,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(left: 6, right: 6),
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              "Средний размер покупки: ${
+                                                  getCostsSum(categories[index].costs)~/categories[index].costs.length} руб.",
+                                              style: TextStyle(
+                                                color: (_selectedCategory == index || _selectedCategory == null)
+                                                    ? getTextColorByBackgroundColor(categories[index].color)
+                                                    : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                fontSize: 10,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
@@ -183,7 +219,7 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                         softWrap: true,
                       ),
                     ) :
-                    context.watch<DatabaseModel>().categories[_selectedCategory!].targets.isEmpty ?
+                    categories[_selectedCategory!].targets.isEmpty ?
                     const Center(
                       child: Text(
                         "Пусто",
@@ -195,18 +231,18 @@ class _AddSavingWidgetState extends State<AddSavingWidget> {
                       ),
                     ) :
                     ListView.builder(
-                      itemCount: context.watch<DatabaseModel>().categories[_selectedCategory!].targets.length,
+                      itemCount: categories[_selectedCategory!].targets.length,
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
-                        if (index == context.watch<DatabaseModel>().categories[_selectedCategory!].targets.length - 1) {
+                        if (index == categories[_selectedCategory!].targets.length - 1) {
                           return Column(
                             children: [
-                              AddSavingListItemWidget(target: context.read<DatabaseModel>().categories[_selectedCategory!].targets[index]),
+                              AddSavingListItemWidget(target: categories[_selectedCategory!].targets[index]),
                               const SizedBox(height: 88),
                             ],
                           );
                         } else {
-                          return AddSavingListItemWidget(target: context.read<DatabaseModel>().categories[_selectedCategory!].targets[index]);
+                          return AddSavingListItemWidget(target: categories[_selectedCategory!].targets[index]);
                         }
                       },
                     ),

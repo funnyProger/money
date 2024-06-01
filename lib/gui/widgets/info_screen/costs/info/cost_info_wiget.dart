@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../data/entities/cost.dart';
+
 class CostInfoWidget extends StatelessWidget {
-  const CostInfoWidget({super.key});
+  const CostInfoWidget({
+    super.key,
+    required this.cost,
+    required this.categoryName,
+  });
+
+  final Cost cost;
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +26,9 @@ class CostInfoWidget extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 15, right: 10),
-                    child: const Text(
-                      "Здоровье",
-                      style: TextStyle(
+                    child: Text(
+                      categoryName,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                       ),
@@ -31,9 +40,9 @@ class CostInfoWidget extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 15, left: 10),
-                    child: const Text(
-                      "852" " ₽",
-                      style: TextStyle(
+                    child: Text(
+                      "${cost.price} ₽",
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                       ),
@@ -51,13 +60,9 @@ class CostInfoWidget extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(left: 11, top: 5, right: 11),
-              child: const Text(
-                "Купил такое то лекарства в машазие, чтобы вылечиться,"
-                "еще купил нужные для тренировок добавки, которые повышают"
-                "выносливость мышц, что позволяет тренироваться дольше. "
-                "Также купил вкусные протеиновые батончики, которые помогают"
-                "во время быстрых перекусов, и по лезно, и внусно.",
-                style: TextStyle(
+              child: Text(
+                cost.description,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15,
                 ),

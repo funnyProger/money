@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../data/database/database_methods.dart';
-import '../data/models/database_model.dart';
-import '../gui/widgets/info_screen/costs/info/cost_info_wiget.dart';
-import '../gui/widgets/info_screen/info_widget.dart';
+import '../data/models/database/database_model.dart';
+import '../data/models/database/database_singleton.dart';
 import '../gui/widgets/info_screen/targets/info/savings_statistics/savings_statistics_widget.dart';
 import '../gui/widgets/info_screen/targets/info/target_info_widget.dart';
 import '../gui/widgets/main_screen/main_widget.dart';
@@ -34,11 +32,6 @@ class Application extends StatefulWidget {
 
 class _ApplicationState extends State<Application> {
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<DatabaseModel>().updateCategories();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +40,6 @@ class _ApplicationState extends State<Application> {
       theme: ThemeData.dark(),
       routes: {
         'main': (context) => const MainWidget(),
-        'info_screen': (context) => const InfoWidget(),
-        "cost_info_screen": (context) => const CostInfoWidget(),
         "target_info_screen": (context) => const TargetInfoWidget(),
         "savings_statistics_screen": (context) => const SavingsStatisticsWidget(),
       },
@@ -58,7 +49,7 @@ class _ApplicationState extends State<Application> {
 }
 
 Future<void> initDatabase() async {
-  await UseDatabase.initDatabase();
+  await DatabaseSingleton.getCategories();
 }
 
 

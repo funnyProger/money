@@ -34,7 +34,6 @@ class UseDatabase implements IDatabase {
       );
       return database;
     } catch (ex) {
-      print(ex);
       return null;
     }
   }
@@ -162,6 +161,18 @@ class UseDatabase implements IDatabase {
           await db.rawQuery(getSavingsQuery, [targetId])).map((item) => Saving.fromDbJson(item)
       ).toList();
       return savings;
+    } catch (ex) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> getAverageCostByDate() async {
+    try {
+      final db = await database;
+      const getAverageCostQuery = "select avg(price) from cost";
+      double result = (await db.rawQuery(getAverageCostQuery))[0]["avg(price)"] as double;
+      return result.toInt() ?? 0;
     } catch (ex) {
       return null;
     }

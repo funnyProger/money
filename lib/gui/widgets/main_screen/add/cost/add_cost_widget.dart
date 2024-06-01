@@ -1,9 +1,10 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/data/entities/category.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import '../../../../../data/models/database_model.dart';
+import '../../../../../data/models/database/database_model.dart';
 import '../../../../../data/entities/cost.dart';
 import '../../grid/grid_item_widget.dart';
 
@@ -37,6 +38,8 @@ class _AddCostWidgetState extends State<AddCostWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<Category> categories = context.watch<DatabaseModel>().categories;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -79,7 +82,7 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                           physics: const BouncingScrollPhysics(),
                           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                           scrollDirection: Axis.horizontal,
-                          itemCount: context.watch<DatabaseModel>().categories.length,
+                          itemCount: categories.length,
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
@@ -93,8 +96,8 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                 width: 150,
                                 decoration: BoxDecoration(
                                   color: (_selectedCategory == index || _selectedCategory == null)
-                                      ? HexColor(context.watch<DatabaseModel>().categories[index].color)
-                                      : HexColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.3),
+                                      ? HexColor(categories[index].color)
+                                      : HexColor(categories[index].color).withOpacity(0.3),
                                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                                   border: Border.all(
                                     color: _selectedCategory == index ? Colors.white : Colors.transparent,
@@ -103,57 +106,90 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                                 ),
                                 child: Column(
                                   children: [
-                                    Expanded(
-                                      flex: 30,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 5, right: 7),
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          context.watch<DatabaseModel>().categories[index].name,
-                                          style: TextStyle(
-                                            color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                            fontSize: 20,
+                                    Column(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 6, right: 6, top: 3),
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            categories[index].name,
+                                            style: TextStyle(
+                                              color: (_selectedCategory == index || _selectedCategory == null)
+                                                  ? getTextColorByBackgroundColor(categories[index].color)
+                                                  : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                              fontSize: 20,
+                                            ),
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          softWrap: true,
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 5,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 7, right: 7),
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          "Потрачено: 11843 руб.",
-                                          style: TextStyle(
-                                            color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                            fontSize: 10,
+                                        categories[index].targets.isEmpty ?
+                                        Container() :
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 6, right: 6),
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            "Цели: ${categories[index].targets.length}",
+                                            style: TextStyle(
+                                              color: (_selectedCategory == index || _selectedCategory == null)
+                                                  ? getTextColorByBackgroundColor(categories[index].color)
+                                                  : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                              fontSize: 10,
+                                            ),
+                                            softWrap: true,
                                           ),
-                                          softWrap: true,
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 7, right: 7),
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          "Доля от ограничения: 27%",
-                                          style: TextStyle(
-                                            color: (_selectedCategory == index || _selectedCategory == null)
-                                                ? getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color)
-                                                : getTextColorByBackgroundColor(context.watch<DatabaseModel>().categories[index].color).withOpacity(0.6),
-                                            fontSize: 10,
-                                          ),
-                                          softWrap: true,
-                                        ),
-                                      ),
-                                    ),
+                                        categories[index].costs.isEmpty ?
+                                        Container() :
+                                        Column(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.only(left: 6, right: 6),
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                "Покупки: ${categories[index].costs.length}",
+                                                style: TextStyle(
+                                                  color: (_selectedCategory == index || _selectedCategory == null)
+                                                      ? getTextColorByBackgroundColor(categories[index].color)
+                                                      : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                  fontSize: 10,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(left: 6, right: 6),
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Потрачено: ${getCostsSum(categories[index].costs)} руб.",
+                                                style: TextStyle(
+                                                  color: (_selectedCategory == index || _selectedCategory == null)
+                                                      ? getTextColorByBackgroundColor(categories[index].color)
+                                                      : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                  fontSize: 10,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(left: 6, right: 6),
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Средний размер покупки: ${
+                                                    getCostsSum(categories[index].costs)~/categories[index].costs.length} руб.",
+                                                style: TextStyle(
+                                                  color: (_selectedCategory == index || _selectedCategory == null)
+                                                      ? getTextColorByBackgroundColor(categories[index].color)
+                                                      : getTextColorByBackgroundColor(categories[index].color).withOpacity(0.6),
+                                                  fontSize: 10,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -412,34 +448,21 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                       Cost(
                         price: int.parse(_costController.text),
                         description: _descriptionController.text,
-                        categoryId: context.read<DatabaseModel>().categories[_selectedCategory!].id,
+                        categoryId: categories[_selectedCategory!].id,
+                        createdAt: DateTime.now().toString(),
                       ),
                     );
-                    if (!result) {
-                      controller.failure();
-                      if (mounted) {
-                        setState(() {
-                          _sliderColor = Colors.red;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          _sliderColor = Colors.blueAccent;
-                        });
-                        controller.reset();
-                      } else {
-                        controller.success();
-                        setState(() {
-                          _sliderColor = Colors.green;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          _sliderColor = Colors.blueAccent;
-                        });
-                        controller.reset();
-                      }
-                    }
-                  } else {
-                    if (mounted) {
+                    if (result) {
+                      controller.success();
+                      setState(() {
+                        _sliderColor = Colors.green;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _sliderColor = Colors.blueAccent;
+                      });
+                      controller.reset();
+                    } else {
                       controller.failure();
                       setState(() {
                         _sliderColor = Colors.red;
@@ -450,6 +473,16 @@ class _AddCostWidgetState extends State<AddCostWidget> {
                       });
                       controller.reset();
                     }
+                  } else {
+                    controller.failure();
+                    setState(() {
+                      _sliderColor = Colors.red;
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
+                    setState(() {
+                      _sliderColor = Colors.blueAccent;
+                    });
+                    controller.reset();
                   }
                 },
                 child: const Text(

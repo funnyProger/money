@@ -3,6 +3,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:pie_menu/pie_menu.dart';
 
 import '../../../../data/entities/category.dart';
+import '../../../../data/entities/cost.dart';
+import '../../info_screen/costs/costs_widget.dart';
+import '../../info_screen/info_widget.dart';
 
 class GridItemWidget extends StatelessWidget {
   const GridItemWidget({
@@ -13,15 +16,16 @@ class GridItemWidget extends StatelessWidget {
   final Category category;
 
 
-
   @override
   Widget build(BuildContext context) {
     return PieMenu(
       key: ValueKey(category.name),
       onPressed: () {
-        Navigator.pushNamed(
-          context, 'info_screen',
-          arguments: category,
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InfoWidget(category: category),
+          ),
         );
       },
       actions: [
@@ -48,51 +52,74 @@ class GridItemWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Expanded(
-              flex: 30,
-              child: Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  category.name,
-                  style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color),
-                    fontSize: 25,
-                  ),
-                  softWrap: true,
+            Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              alignment: Alignment.topLeft,
+              child: Text(
+                category.name,
+                style: TextStyle(
+                  color: getTextColorByBackgroundColor(category.color),
+                  fontSize: 25,
                 ),
+                softWrap: true,
               ),
             ),
-            Expanded(
-              flex: 5,
-              child: Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  "Потрачено: 11843 руб.",
-                  style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color),
-                    fontSize: 13,
-                  ),
-                  softWrap: true,
+            category.targets.isEmpty ?
+            Container() :
+            Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "Цели: 3",
+                style: TextStyle(
+                  color: getTextColorByBackgroundColor(category.color),
+                  fontSize: 13,
                 ),
+                softWrap: true,
               ),
             ),
-            Expanded(
-              flex: 7,
-              child: Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Доля от ограничения: 27%",
-                  style: TextStyle(
-                    color: getTextColorByBackgroundColor(category.color),
-                    fontSize: 13,
+            category.costs.isEmpty ?
+            Container() :
+            Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    "Покупки: ${category.costs.length}",
+                    style: TextStyle(
+                      color: getTextColorByBackgroundColor(category.color),
+                      fontSize: 13,
+                    ),
+                    softWrap: true,
                   ),
-                  softWrap: true,
                 ),
-              ),
-            ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Потрачено: ${getCostsSum(category.costs)} руб.",
+                    style: TextStyle(
+                      color: getTextColorByBackgroundColor(category.color),
+                      fontSize: 13,
+                    ),
+                    softWrap: true,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Средний размер покупки: ${getCostsSum(category.costs)~/category.costs.length} руб.",
+                    style: TextStyle(
+                      color: getTextColorByBackgroundColor(category.color),
+                      fontSize: 13,
+                    ),
+                    softWrap: true,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -103,4 +130,13 @@ class GridItemWidget extends StatelessWidget {
 getTextColorByBackgroundColor(String color) {
   return HexColor(color).computeLuminance() > 0.3
       ? Colors.black : Colors.white;
+}
+
+int getCostsSum(List<Cost> costs) {
+  int costsSum = 0;
+
+  for (Cost cost in costs) {
+    costsSum += cost.price;
+  }
+  return costsSum;
 }

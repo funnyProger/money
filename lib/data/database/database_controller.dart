@@ -13,6 +13,7 @@ abstract class IDatabase {
   Future<List<Target>?> getTargetsByCategory(int categoryId);
   Future<List<Cost>?> getCostsByCategory(int categoryId);
   Future<List<Saving>?> getSavingsByTarget(int targetId);
+  Future<int?> getAverageCostByDate();
 }
 
 class DatabaseController {
@@ -50,4 +51,7 @@ class DatabaseController {
     return _implementationObject.getSavingsByTarget(targetId);
   }
 
+  Future<int?> getAverageCostByDate() async {
+    return _implementationObject.getAverageCostByDate();
+  }
 }

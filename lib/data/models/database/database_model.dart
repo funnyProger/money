@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import '../entities/category.dart';
-import '../entities/cost.dart';
-import '../entities/target.dart';
-import '../entities/saving.dart';
-import '../database/database_controller.dart';
+import '../../entities/category.dart';
+import '../../entities/cost.dart';
+import '../../entities/target.dart';
+import '../../entities/saving.dart';
+import '../../database/database_controller.dart';
+import 'database_singleton.dart';
 
 class DatabaseModel extends ChangeNotifier {
+  final DatabaseSingleton _databaseSingleton = DatabaseSingleton.databaseSingleton;
   final DatabaseController _databaseController = DatabaseController();
-  List<Category> _categories = [];
 
   Future<bool> addCost(Cost cost) async {
     bool result = await _databaseController.addCostToDatabase(cost);
@@ -20,12 +21,12 @@ class DatabaseModel extends ChangeNotifier {
   }
 
   Future<bool> addCategory(Category category) async {
-    bool result = await _databaseController.addCategoryToDatabase(category);
+    bool result = await _databaseSingleton.add(category);
     if (result) {
       await updateCategories();
       return result;
     } else {
-      return false;
+      return result;
     }
   }
 
@@ -52,11 +53,20 @@ class DatabaseModel extends ChangeNotifier {
 
   Future<void> updateCategories() async {
     try {
-      _categories = await _databaseController.getCategoriesFromDatabase() ?? [];
+      await DatabaseSingleton.getCategories();
       notifyListeners();
     } catch (ex) {
       debugPrint(ex.toString());}
   }
 
-  List<Category> get categories => [..._categories];
+  Future<int?> getAverageCostByDate() async {
+    try {
+      int? result = await _databaseController.getAverageCostByDate();
+      return result;
+    } catch (ex) {
+      return 0;
+    }
+  }
+
+  List<Category> get categories => _databaseSingleton.categories;
 }

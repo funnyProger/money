@@ -50,10 +50,10 @@ class AddSavingListItemWidget extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
                               child: Text(
-                                  target.name,
+                                  "Название: ${target.name}",
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 15,
+                                    fontSize: 13,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 3
@@ -63,7 +63,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
                               child: Text(
-                                  "Прошло дней: ${DateTime.parse(target.firstDate).day}/${DateTime.parse(target.lastDate).day} дн.",
+                                getCurrentDateTextForTarget(target),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -146,4 +146,14 @@ int getSum(Target target) {
     sum += saving.price;
   }
   return sum;
+}
+
+String getCurrentDateTextForTarget(Target target) {
+  if (DateTime.parse(target.firstDate).day - DateTime.now().day > 0) {
+    return "Статус: Ожидание";
+  } else if (DateTime.now().day - DateTime.parse(target.lastDate).day > 0) {
+    return "Статус: Завершено";
+  } else {
+    return "Прошло дней: ${DateTime.now().day - DateTime.parse(target.firstDate).day}/${DateTime.parse(target.lastDate).day} дн.";
+  }
 }

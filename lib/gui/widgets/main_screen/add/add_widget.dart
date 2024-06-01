@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_widget.dart';
 import 'package:flutter_projects/gui/widgets/main_screen/add/target/add_target_widget.dart';
 import 'package:provider/provider.dart';
-import '../../../../data/models/database_model.dart';
+import '../../../../data/models/database/database_model.dart';
 import 'category/add_category_widget.dart';
 import 'cost/add_cost_widget.dart';
 

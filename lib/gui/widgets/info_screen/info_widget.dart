@@ -2,10 +2,16 @@ import 'package:animated_segmented_tab_control/animated_segmented_tab_control.da
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/statistica/statistica_widget.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/targets/targets_widget.dart';
+import '../../../data/entities/category.dart';
 import 'costs/costs_widget.dart';
 
 class InfoWidget extends StatefulWidget {
-  const InfoWidget({super.key});
+  const InfoWidget({
+    super.key,
+    required this.category,
+  });
+
+  final Category category;
 
   @override
   State<InfoWidget> createState() {
@@ -83,10 +89,10 @@ class _InfoWidgetState extends State<InfoWidget>
                 alignment: Alignment.center,
                 child: TabBarView(
                   controller: _tabController,
-                  children: const [
-                    CostsWidget(),
-                    TargetsWidget(),
-                    StatisticaWidget()
+                  children: [
+                    CostsWidget(category: widget.category),
+                    const TargetsWidget(),
+                    const StatisticaWidget()
                   ],
                 ),
               ),

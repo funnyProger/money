@@ -4,7 +4,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_projects/data/entities/category.dart';
 import 'package:provider/provider.dart';
-import '../../../../../data/models/database_model.dart';
+import '../../../../../data/models/database/database_model.dart';
 import '../../grid/grid_item_widget.dart';
 
 class AddCategoryWidget extends StatefulWidget {
@@ -83,51 +83,70 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                                 ),
                                 child: Column(
                                   children: [
-                                    Expanded(
-                                      flex: 30,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          _categoryName,
-                                          style: TextStyle(
-                                            color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
-                                            fontSize: 25,
-                                          ),
-                                          softWrap: true,
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        _categoryName,
+                                        style: TextStyle(
+                                          color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
+                                          fontSize: 25,
                                         ),
+                                        softWrap: true,
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 5,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                        alignment: Alignment.bottomLeft,
-                                        child: Text(
-                                          "Потрачено: 11843 руб.",
-                                          style: TextStyle(
-                                            color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
-                                            fontSize: 15,
-                                          ),
-                                          softWrap: true,
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 10, right: 10),
+                                      alignment: Alignment.bottomLeft,
+                                      child: Text(
+                                        "Цели: 3",
+                                        style: TextStyle(
+                                          color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
+                                          fontSize: 16,
                                         ),
+                                        softWrap: true,
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          "Доля от ограничения: 27%",
-                                          style: TextStyle(
-                                            color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
-                                            fontSize: 15,
+                                    Column(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            "Покупки: 14",
+                                            style: TextStyle(
+                                              color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
+                                              fontSize: 16,
+                                            ),
+                                            softWrap: true,
                                           ),
-                                          softWrap: true,
                                         ),
-                                      ),
-                                    ),
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            "Потрачено: 16244 руб.",
+                                            style: TextStyle(
+                                              color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
+                                              fontSize: 16,
+                                            ),
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(left: 10, right: 10),
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            "Средний размер покупки: 1160 руб.",
+                                            style: TextStyle(
+                                              color: getTextColorByBackgroundColor(_currentColor.value.toRadixString(16)),
+                                              fontSize: 16,
+                                            ),
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -433,10 +452,10 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                         color: _currentColor.toHexString(),
                       ),
                     );
-                    if (!result) {
-                      controller.failure();
+                    if (result) {
+                      controller.success();
                       setState(() {
-                        _sliderColor = Colors.red;
+                        _sliderColor = Colors.green;
                       });
                       await Future.delayed(const Duration(seconds: 2));
                       setState(() {
@@ -444,9 +463,9 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                       });
                       controller.reset();
                     } else {
-                      controller.success();
+                      controller.failure();
                       setState(() {
-                        _sliderColor = Colors.green;
+                        _sliderColor = Colors.red;
                       });
                       await Future.delayed(const Duration(seconds: 2));
                       setState(() {

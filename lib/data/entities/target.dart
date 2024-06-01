@@ -2,6 +2,7 @@ import 'package:flutter_projects/data/entities/saving.dart';
 
 class Target {
   final int id;
+  final int price;
   final String name;
   final String description;
   final int priority;
@@ -13,6 +14,7 @@ class Target {
 
   Target({
     this.id = 0,
+    required this.price,
     required this.name,
     required this.description,
     required this.priority,
@@ -25,6 +27,7 @@ class Target {
 
   Map<String, dynamic> toDbJson() {
     return {
+      "price": price,
       "name": name,
       "description": description,
       "priority": priority,
@@ -38,6 +41,7 @@ class Target {
   factory Target.fromDbJson(Map<String, dynamic> json) {
     return Target(
       id: json["id"],
+      price: json["price"],
       name: json["name"],
       description: json["description"],
       priority: json["priority"],

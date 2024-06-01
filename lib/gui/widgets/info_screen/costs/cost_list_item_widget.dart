@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../../data/entities/cost.dart';
+import 'info/cost_info_wiget.dart';
+
 class CostListItemWidget extends StatelessWidget {
-  const CostListItemWidget({super.key});
+  const CostListItemWidget({
+    super.key,
+    required this.cost,
+    required this.categoryName,
+  });
+
+  final Cost cost;
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +21,14 @@ class CostListItemWidget extends StatelessWidget {
       margin: const EdgeInsets.only(left: 8, top: 3, right: 8, bottom: 3),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            "cost_info_screen",
+            MaterialPageRoute(
+              builder: (context) => CostInfoWidget(
+                cost: cost,
+                categoryName: categoryName,
+              ),
+            ),
           );
         },
         borderRadius: BorderRadius.circular(10),
@@ -29,9 +44,9 @@ class CostListItemWidget extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 8),
-                  child: const Text(
-                    "Лекарства в аптеке, которые мне нужны, чтобы вылечиться",
-                    style: TextStyle(
+                  child: Text(
+                    cost.description,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                     ),
@@ -45,9 +60,9 @@ class CostListItemWidget extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 8),
-                  child: const Text(
-                    "852" " ₽",
-                    style: TextStyle(
+                  child: Text(
+                    "${cost.price} ₽",
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                     ),

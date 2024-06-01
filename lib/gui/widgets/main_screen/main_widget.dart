@@ -1,8 +1,9 @@
 import 'package:draggable_home/draggable_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/data/entities/category.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:provider/provider.dart';
-import '../../../data/models/database_model.dart';
+import '../../../data/models/database/database_model.dart';
 import 'add/add_widget.dart';
 import 'chart/circular_chart_widget.dart';
 import 'grid/grid_item_widget.dart';
@@ -18,53 +19,18 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<Category> categories = context.watch<DatabaseModel>().categories;
 
-    if (context.watch<DatabaseModel>().categories.isEmpty) {
+    if (categories.isEmpty) {
       return SafeArea(
-        child: Scaffold(
-            backgroundColor: const Color.fromARGB(255, 30, 30, 30),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddWidget(tabIndex: context.read<DatabaseModel>().categories.isEmpty ? 1 : 0),
-                    )
-                );
-              },
-              backgroundColor: Colors.blueAccent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            ),
-            body: const Center(
-              child: Text(
-                "Добавьте категорию",
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15
-                ),
-              ),
-            )
-        ),
-      );
-    } else {
-      return PieCanvas(
-        theme: const PieTheme(
-          brightness: Brightness.dark,
-        ),
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddWidget(tabIndex: context.read<DatabaseModel>().categories.isEmpty ? 1 : 0),
-                )
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddWidget(tabIndex: context.read<DatabaseModel>().categories.isEmpty ? 1 : 0),
+                  )
               );
             },
             backgroundColor: Colors.blueAccent,
@@ -76,7 +42,42 @@ class _MainWidgetState extends State<MainWidget> {
               color: Colors.white,
             ),
           ),
-          body: DraggableHome(
+          body: const Center(
+            child: Text(
+              "Добавьте категорию",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+              )
+            ),
+          ),
+        ),
+      );
+    } else {
+      return PieCanvas(
+        theme: const PieTheme(
+          brightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddWidget(tabIndex: categories.isEmpty ? 1 : 0),
+                  )
+              );
+            },
+            backgroundColor: Colors.blueAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+          body: checkCosts(categories) ? DraggableHome(
             backgroundColor: Colors.black,
             appBarColor: Colors.black,
             title: Container(
@@ -122,9 +123,9 @@ class _MainWidgetState extends State<MainWidget> {
                             flex: 70,
                             child: Container(
                               alignment: Alignment.topLeft,
-                              child: const Text(
-                                "42856 ₽",
-                                style: TextStyle(
+                              child: Text(
+                                "${getAllCostsSum(categories)} ₽",
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 27,
                                 ),
@@ -134,28 +135,56 @@ class _MainWidgetState extends State<MainWidget> {
                           ),
                           Expanded(
                               flex: 40,
-                              child: Container(
+                              child: getAllTargets(categories) == 0 ? Container() : Container(
                                 alignment: Alignment.bottomLeft,
-                                child: const Text(
-                                  "Уровень расходов: Хороший",
-                                  style: TextStyle(
+                                child: Text(
+                                  "Всего целей: ${getAllTargets(categories)}",
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                   ),
                                   softWrap: true,
                                 ),
-                              )),
+                              )
+                          ),
+                          Expanded(
+                              flex: 15,
+                              child: Container(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                  "Всего категорий: ${categories.length}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              )
+                          ),
                           Expanded(
                             flex: 50,
                             child: Container(
                               alignment: Alignment.topLeft,
-                              child: const Text(
-                                "Средние расходы за день: 8344 ₽",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                ),
-                                softWrap: true,
+                              child: FutureBuilder<int?>(
+                                future: context.watch<DatabaseModel>().getAverageCostByDate(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data == 0) {
+                                      return Container();
+                                    } else {
+                                      return Text(
+                                        "Средние расходы за день: ${snapshot.data} ₽",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                        ),
+                                        softWrap: true,
+                                      );
+                                    }
+                                  } else {
+                                    return Container();
+                                  }
+                                }
                               ),
                             ),
                           ),
@@ -188,9 +217,55 @@ class _MainWidgetState extends State<MainWidget> {
                 },
               ),
             ],
-          ),
+          ) : SafeArea(
+            child: Scaffold(
+              body: GridView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                itemCount: context.watch<DatabaseModel>().categories.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return GridItemWidget(
+                    category: context.watch<DatabaseModel>().categories[index],
+                  );
+                },
+              ),
+            ),
+          )
         ),
       );
     }
   }
+}
+
+bool checkCosts(List<Category> categories) {
+  for (var category in categories) {
+    if (category.costs.isNotEmpty) {
+      return true;
+    }
+  }
+  return false;
+}
+
+int getAllCostsSum(List<Category> categories) {
+  int sum = 0;
+  for (var category in categories) {
+    for (var cost in category.costs) {
+      sum += cost.price;
+    }
+  }
+  return sum;
+}
+
+int getAllTargets(List<Category> categories) {
+  int count = 0;
+  for (var category in categories) {
+    count += category.targets.length;
+  }
+  return count;
 }

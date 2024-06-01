@@ -1,7 +1,7 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../data/models/database_model.dart';
+import '../../../../../data/models/database/database_model.dart';
 import '../../../../../data/entities/saving.dart';
 import '../../../../../data/entities/target.dart';
 import '../cost/add_cost_widget.dart';
@@ -207,10 +207,10 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
                           targetId: widget.target.id,
                         ),
                       );
-                      if (!result) {
-                        controller.failure();
+                      if (result) {
+                        controller.success();
                         setState(() {
-                          _sliderColor = Colors.red;
+                          _sliderColor = Colors.green;
                         });
                         await Future.delayed(const Duration(seconds: 2));
                         setState(() {
@@ -218,9 +218,9 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
                         });
                         controller.reset();
                       } else {
-                        controller.success();
+                        controller.failure();
                         setState(() {
-                          _sliderColor = Colors.green;
+                          _sliderColor = Colors.red;
                         });
                         await Future.delayed(const Duration(seconds: 2));
                         setState(() {

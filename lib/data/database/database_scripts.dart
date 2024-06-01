@@ -2,6 +2,7 @@ class DatabaseScripts {
   static const createCostTable =
   ''' create table if not exists cost (
         id integer primary key autoincrement,
+        created_at text not null,
         price integer not null,
         description text default 'Пусто',
         category_id integer not null,
@@ -21,6 +22,7 @@ class DatabaseScripts {
   static const createTargetTable =
   ''' create table if not exists target (
         id integer primary key autoincrement,
+        price integer not null,
         name text not null unique,
         description text not null,
         priority integer not null,

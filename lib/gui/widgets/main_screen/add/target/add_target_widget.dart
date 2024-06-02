@@ -739,7 +739,7 @@ class _AddTargetWidgetState extends State<AddTargetWidget> {
                       _descriptionController.text.isNotEmpty) {
                     bool result = await context.read<DatabaseModel>().addTarget(
                           Target(
-                            price: int.parse(_priceController.text),
+                            price: double.parse(_priceController.text),
                             name: _nameController.text,
                             description: _descriptionController.text,
                             priority: _selectedPriority!,

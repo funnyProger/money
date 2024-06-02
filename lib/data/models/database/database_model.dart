@@ -59,10 +59,28 @@ class DatabaseModel extends ChangeNotifier {
       debugPrint(ex.toString());}
   }
 
-  Future<int?> getAverageCostByDate() async {
+  Future<int?> getAverageDaysCost() async {
     try {
-      int? result = await _databaseController.getAverageCostByDate();
-      return result;
+      int? result = await _databaseController.getAverageDaysCost();
+      return result ?? 0;
+    } catch (ex) {
+      return 0;
+    }
+  }
+
+  Future<int?> getAverageDaysSaving(int targetId) async {
+    try {
+      int? result = await _databaseController.getAverageDaysSaving(targetId);
+      return result ?? 0;
+    } catch (ex) {
+      return 0;
+    }
+  }
+
+  Future<int?> getRequiredSaving(int targetId) async {
+    try {
+      int? result = await _databaseController.getRequiredSaving(targetId);
+      return result ?? 0;
     } catch (ex) {
       return 0;
     }

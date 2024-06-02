@@ -1,9 +1,15 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../../data/entities/saving.dart';
+
 
 class SavingStatisticsListItemWidget extends StatelessWidget {
-  const SavingStatisticsListItemWidget({super.key});
+  const SavingStatisticsListItemWidget({
+    super.key,
+    required this.saving,
+  });
+  final Saving saving;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class SavingStatisticsListItemWidget extends StatelessWidget {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 8),
             child: Text(
-              "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}",
+              saving.createAt.substring(0, 10),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,
@@ -47,9 +53,9 @@ class SavingStatisticsListItemWidget extends StatelessWidget {
           Container(
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.only(right: 8),
-            child: const Text(
-              "852" " ₽",
-              style: TextStyle(
+            child: Text(
+              "${saving.price} ₽",
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,
               ),

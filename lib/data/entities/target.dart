@@ -2,7 +2,7 @@ import 'package:flutter_projects/data/entities/saving.dart';
 
 class Target {
   final int id;
-  final int price;
+  final double price;
   final String name;
   final String description;
   final int priority;

@@ -1,8 +1,18 @@
 import 'package:circular_seek_bar/circular_seek_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/gui/widgets/info_screen/targets/info/savings_statistics/savings_statistics_widget.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_list_item_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../../data/entities/target.dart';
+import '../../../../../data/models/database/database_model.dart';
 
 class TargetInfoWidget extends StatefulWidget {
-  const TargetInfoWidget({super.key});
+  const TargetInfoWidget({
+    super.key,
+    required this.target,
+  });
+  final Target target;
 
   @override
   State<TargetInfoWidget> createState() => _TargetInfoWidgetState();
@@ -33,9 +43,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(left: 15, right: 10),
-                    child: const Text(
-                      "Купить компьютер",
-                      style: TextStyle(
+                    child: Text(
+                      widget.target.name,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                       ),
@@ -63,7 +73,7 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                           width: double.infinity,
                           interactive: false,
                           height: 300,
-                          progress: 67,
+                          progress: widget.target.progress * 100,
                           barWidth: 8,
                           startAngle: 45,
                           sweepAngle: 270,
@@ -136,9 +146,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "43822 / 50000 руб.",
-                                      style: TextStyle(
+                                    child: Text(
+                                      "${getSavingsSum(widget.target).toInt()} / ${widget.target.price.toInt()} руб.",
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -162,16 +172,34 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "891 руб.",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
+                                  FutureBuilder(
+                                    future: context.watch<DatabaseModel>().getAverageDaysSaving(widget.target.id),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            "${snapshot.data} руб.",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return Container(
+                                          alignment: Alignment.centerRight,
+                                          child: const Text(
+                                            "0 руб.",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  )
                                 ],
                               ),
                             ),
@@ -184,7 +212,7 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                     alignment: Alignment.centerLeft,
                                     padding: const EdgeInsets.only(right: 5),
                                     child: const Text(
-                                      "Нужный размер накопления: ",
+                                      "Необходимый размер накопления: ",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
@@ -194,12 +222,27 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "736 руб.",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
+                                    child: FutureBuilder(
+                                      future: context.watch<DatabaseModel>().getRequiredSaving(widget.target.id),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                            "${snapshot.data! ~/ DateTime.parse(widget.target.lastDate).difference(DateTime.parse(widget.target.firstDate)).inDays} руб.",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          );
+                                        } else {
+                                          return const Text(
+                                            "0 руб.",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
+                                          );
+                                        }
+                                      }
                                     ),
                                   ),
                                 ],
@@ -213,7 +256,7 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                     alignment: Alignment.centerLeft,
                                     padding: const EdgeInsets.only(right: 5),
                                     child: const Text(
-                                      "Накоплений добавлено: ",
+                                      "Всего накоплений: ",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
@@ -222,9 +265,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "42",
-                                      style: TextStyle(
+                                    child: Text(
+                                      "${widget.target.savings.length}",
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -250,9 +293,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "82 / 123 дн.",
-                                      style: TextStyle(
+                                    child: Text(
+                                      getPeriodForTargetInfo(widget.target),
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -278,9 +321,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "1.01.2024  -  31.12.2024",
-                                      style: TextStyle(
+                                    child: Text(
+                                      "${widget.target.firstDate.substring(0, 10)}  -  ${widget.target.lastDate.substring(0, 10)} (${DateTime.parse(widget.target.lastDate.substring(0, 10)).difference(DateTime.parse(widget.target.firstDate.substring(0, 10))).inDays} дн.)",
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -306,9 +349,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   ),
                                   Container(
                                     alignment: Alignment.centerRight,
-                                    child: const Text(
-                                      "7",
-                                      style: TextStyle(
+                                    child: Text(
+                                      "${widget.target.priority}",
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
                                       ),
@@ -327,9 +370,11 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          Navigator.pushNamed(
+                                          Navigator.push(
                                             context,
-                                            "savings_statistics_screen",
+                                            MaterialPageRoute(
+                                              builder: (context) => SavingsStatisticsWidget(savings: widget.target.savings),
+                                            ),
                                           );
                                         });
                                       },
@@ -372,16 +417,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                         right: 10,
                         bottom: 10,
                       ),
-                      child: const Text(
-                        "Я хотел накопить на компьютер для того, чтобы играть, но"
-                        "у меня понка что мало возможностей, чтобы это сделать."
-                        "Пока что я могу добавлять лишь по 80% от нужного размера"
-                        "накопления, поэтому думаю мне понадобится больше времениб"
-                        "чтобы собрать нужные деньги. Меня это не особо тревожит,"
-                        "потому что даже если так, к моменту, когда я соберу нужные"
-                        "деньги, все комплектующие подешевеют еще и возможно даже"
-                        "у меня постанется немного.",
-                        style: TextStyle(
+                      child: Text(
+                        widget.target.description,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                         ),

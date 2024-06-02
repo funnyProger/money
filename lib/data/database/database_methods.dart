@@ -87,11 +87,10 @@ class UseDatabase implements IDatabase {
   Future<bool> addSaving(Saving saving) async {
     try {
       final db = await database;
-      await db.insert(
-          "saving",
-          saving.toDbJson(),
-          conflictAlgorithm: ConflictAlgorithm.replace
-      );
+      await db.transaction((txn) async {
+        await txn.rawInsert('insert into saving (created_at, price, target_id) values (?, ?, ?)', [saving.createAt, saving.price, saving.targetId]);
+        await txn.rawUpdate('update target set progress = (select sum(price) from saving where target_id = ?) / (select price from target where id = ?) where id = ?', [saving.targetId, saving.targetId, saving.targetId]);
+      });
       return true;
     } catch (ex) {
       return false;
@@ -167,12 +166,37 @@ class UseDatabase implements IDatabase {
   }
 
   @override
-  Future<int?> getAverageCostByDate() async {
+  Future<int?> getAverageDaysCost() async {
     try {
       final db = await database;
       const getAverageCostQuery = "select avg(price) from cost";
       double result = (await db.rawQuery(getAverageCostQuery))[0]["avg(price)"] as double;
-      return result.toInt() ?? 0;
+      return result.toInt();
+    } catch (ex) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> getAverageDaysSaving(int targetId) async {
+    try {
+      final db = await database;
+      String getAverageSavingQuery = "select avg(price) from saving where target_id = $targetId";
+      double result = (await db.rawQuery(getAverageSavingQuery))[0]["avg(price)"] as double;
+      return result.toInt();
+    } catch (ex) {
+      return null;
+    }
+  }
+
+  @override
+  Future<int?> getRequiredSaving(int targetId) async {
+    try {
+      final db = await database;
+      String getSavingByPriorityQuery = "select ((select sum(price) from target) / (select sum(priority) from target)"
+          "* (select priority from target where id = $targetId)) as result";
+      double result = (await db.rawQuery(getSavingByPriorityQuery))[0]["result"] as double;
+      return result.toInt();
     } catch (ex) {
       return null;
     }

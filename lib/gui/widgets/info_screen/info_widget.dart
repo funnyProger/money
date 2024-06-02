@@ -91,8 +91,8 @@ class _InfoWidgetState extends State<InfoWidget>
                   controller: _tabController,
                   children: [
                     CostsWidget(category: widget.category),
-                    const TargetsWidget(),
-                    const StatisticaWidget()
+                    TargetsWidget(category: widget.category),
+                    StatisticaWidget(category: widget.category),
                   ],
                 ),
               ),

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/statistica/targets_statistica/targets_statistica_widget.dart';
+import '../../../../data/entities/category.dart';
 import 'costs_statistica/costs_statistica_widget.dart';
 
 class StatisticaWidget extends StatefulWidget {
-  const StatisticaWidget({super.key});
+  const StatisticaWidget({
+    super.key,
+    required this.category,
+  });
+  final Category category;
 
   @override
   State<StatisticaWidget> createState() => _StatisticaWidgetState();
@@ -18,17 +23,27 @@ class _StatisticaWidgetState extends State<StatisticaWidget> {
         right: 10,
       ),
       alignment: Alignment.topCenter,
-      child: const SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            CostsStatisticaWidget(),
-            SizedBox(
-              height: 10,
+            widget.category.costs.isEmpty ? Container() :
+            Column(
+              children: [
+                CostsStatisticaWidget(costs: widget.category.costs),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
             ),
-            TargetsStatisticaWidget(),
-            SizedBox(
-              height: 94,
+            widget.category.targets.isEmpty ? Container() :
+            Column(
+              children: [
+                TargetsStatisticaWidget(targets: widget.category.targets),
+                const SizedBox(
+                  height: 93,
+                ),
+              ],
             ),
           ],
         ),

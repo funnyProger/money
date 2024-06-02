@@ -203,7 +203,8 @@ class _AddSavingFormWidgetState extends State<AddSavingFormWidget> {
                     ) {
                       bool result = await context.read<DatabaseModel>().addSaving(
                         Saving(
-                          price: int.parse(_savingController.text),
+                          createAt: DateTime.now().toString(),
+                          price: double.parse(_savingController.text),
                           targetId: widget.target.id,
                         ),
                       );

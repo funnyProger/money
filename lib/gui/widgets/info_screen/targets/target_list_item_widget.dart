@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_list_item_widget.dart';
+
+import '../../../../data/entities/target.dart';
+import 'info/target_info_widget.dart';
 
 class TargetListItemWidget extends StatelessWidget {
-  const TargetListItemWidget({super.key});
+  const TargetListItemWidget({
+    super.key,
+    required this.target,
+  });
+  final Target target;
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +19,11 @@ class TargetListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 5),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            "target_info_screen",
+            MaterialPageRoute(
+              builder: (context) => TargetInfoWidget(target: target),
+            ),
           );
         },
         borderRadius: BorderRadius.circular(10),
@@ -37,11 +47,11 @@ class TargetListItemWidget extends StatelessWidget {
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(left: 8),
-                            child: const Text(
-                                "Купить компьютер",
-                                style: TextStyle(
+                            child: Text(
+                                "Название: ${target.name}",
+                                style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: 13,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3
@@ -50,9 +60,9 @@ class TargetListItemWidget extends StatelessWidget {
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(left: 8),
-                            child: const Text(
-                                "Прошло дней: 82/123 дн.",
-                                style: TextStyle(
+                            child: Text(
+                                getCurrentDateTextForTarget(target),
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
                                 ),
@@ -63,9 +73,9 @@ class TargetListItemWidget extends StatelessWidget {
                           Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(left: 8),
-                            child: const Text(
-                                "Прогресс: 50%",
-                                style: TextStyle(
+                            child: Text(
+                                "Прогресс: ${(100 * target.progress).toInt()}%",
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
                                 ),
@@ -77,15 +87,15 @@ class TargetListItemWidget extends StatelessWidget {
                       )
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: Container(
                         alignment: Alignment.topRight,
                         padding: const EdgeInsets.only(right: 8),
-                        child: const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Накоплено: ",
                               style: TextStyle(
                                 color: Colors.white,
@@ -96,8 +106,8 @@ class TargetListItemWidget extends StatelessWidget {
                               maxLines: 1,
                             ),
                             Text(
-                              "30000" " ₽",
-                              style: TextStyle(
+                              "${getSavingsSum(target)}/${target.price.toInt()}₽",
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                               ),
@@ -115,7 +125,7 @@ class TargetListItemWidget extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 8),
                 child: LinearProgressIndicator(
-                  value: 0.5,
+                  value: target.progress,
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(100),
                 ),

@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_projects/gui/widgets/info_screen/targets/target_list_item_widget.dart';
 
+import '../../../../data/entities/category.dart';
+import '../../../../data/entities/target.dart';
+
 
 class TargetsWidget extends StatefulWidget {
-  const TargetsWidget({super.key});
+  const TargetsWidget({
+    super.key,
+    required this.category
+  });
+  final Category category;
 
   @override
   State<TargetsWidget> createState() => _TargetsWidgetState();
@@ -16,7 +23,15 @@ class _TargetsWidgetState extends State<TargetsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: NestedScrollView(
+      body: widget.category.targets.isEmpty ? const Center(
+        child: Text(
+          "Добавьте цель",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 15,
+          ),
+        ),
+      ) : NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
@@ -42,9 +57,9 @@ class _TargetsWidgetState extends State<TargetsWidget> {
                           left: 13,
                           top: 10,
                         ),
-                        child: const Text(
-                          "Здоровье",
-                          style: TextStyle(
+                        child: Text(
+                          widget.category.name,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 25,
                           ),
@@ -58,9 +73,9 @@ class _TargetsWidgetState extends State<TargetsWidget> {
                         padding: const EdgeInsets.only(
                           left: 13,
                         ),
-                        child: const Text(
-                          "Общий прогресс: 67%",
-                          style: TextStyle(
+                        child: Text(
+                          "Число целей: ${widget.category.targets.length}",
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                           ),
@@ -72,9 +87,9 @@ class _TargetsWidgetState extends State<TargetsWidget> {
                           left: 13,
                           bottom: 10,
                         ),
-                        child: const Text(
-                          "Число целей: 4",
-                          style: TextStyle(
+                        child: Text(
+                          "Общий прогресс: ${(getTargetsProgress(widget.category.targets) * 100).toInt()}%",
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                           ),
@@ -88,19 +103,29 @@ class _TargetsWidgetState extends State<TargetsWidget> {
           ];
         },
         body: ListView.builder(
-          itemCount: 14,
+          itemCount: widget.category.targets.length + 1,
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            if (index == 13) {
+            if (index == widget.category.targets.length) {
               return const SizedBox(
                 height: 88,
               );
             } else {
-              return const TargetListItemWidget();
+              return TargetListItemWidget(target: widget.category.targets[index]);
             }
           },
         ),
       ),
     );
+  }
+}
+
+double getTargetsProgress(List<Target> targets) {
+  if (targets.isEmpty) {
+    return 0;
+  } else {
+    return targets
+        .map((target) => target.progress)
+        .reduce((value, element) => value + element) / targets.length;
   }
 }

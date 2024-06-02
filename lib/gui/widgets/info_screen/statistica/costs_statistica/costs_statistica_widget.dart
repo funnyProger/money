@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/grid/grid_item_widget.dart';
+import 'package:provider/provider.dart';
+import '../../../../../data/entities/cost.dart';
+import '../../../../../data/models/database/database_model.dart';
 import '../../../main_screen/chart/line_chart_widget.dart';
 
 class CostsStatisticaWidget extends StatelessWidget {
-  const CostsStatisticaWidget({super.key});
+  const CostsStatisticaWidget({
+    super.key,
+    required this.costs,
+  });
+  final List<Cost> costs;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +38,7 @@ class CostsStatisticaWidget extends StatelessWidget {
               ),
             ),
           ),
-          const LineChartWidget(),
+          LineChartWidget(costs: costs),
           Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(left: 10, top: 7, bottom: 7),
@@ -62,9 +70,9 @@ class CostsStatisticaWidget extends StatelessWidget {
                           ),
                           Container(
                             alignment: Alignment.centerRight,
-                            child: const Text(
-                              "43822 руб.",
-                              style: TextStyle(
+                            child: Text(
+                              "${getCostsSum(costs)} руб.",
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                               ),
@@ -90,12 +98,27 @@ class CostsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "891 руб.",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
+                          child: FutureBuilder(
+                            future: context.watch<DatabaseModel>().getAverageDaysCost(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  "${snapshot.data} руб.",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                );
+                              } else {
+                                return const Text(
+                                  "0 руб.",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ),
                       ],
@@ -120,9 +143,9 @@ class CostsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "736 руб.",
-                            style: TextStyle(
+                          child: Text(
+                            "${costs.map((e) => e.price).toList().reduce((value, element) => value > element ? value : element)} руб.",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -148,9 +171,9 @@ class CostsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "42",
-                            style: TextStyle(
+                          child: Text(
+                            "${costs.length}",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -176,9 +199,9 @@ class CostsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "Вторник",
-                            style: TextStyle(
+                          child: Text(
+                            getCorrectDayName(getCostsSumByDay(costs).entries.reduce((valueAndKey, entry) => entry.value > valueAndKey.value ? entry : valueAndKey).key),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -194,5 +217,28 @@ class CostsStatisticaWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String getCorrectDayName(DateTime date) {
+
+
+  switch (date.weekday) {
+    case 1:
+      return "Понедельник";
+    case 2:
+      return "Вторник";
+    case 3:
+      return "Среда";
+    case 4:
+      return "Четверг";
+    case 5:
+      return "Пятница";
+    case 6:
+      return "Суббота";
+    case 7:
+      return "Воскресенье";
+    default:
+      return "";
   }
 }

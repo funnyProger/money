@@ -22,7 +22,7 @@ class DatabaseScripts {
   static const createTargetTable =
   ''' create table if not exists target (
         id integer primary key autoincrement,
-        price integer not null,
+        price real not null,
         name text not null unique,
         description text not null,
         priority integer not null,
@@ -37,7 +37,8 @@ class DatabaseScripts {
   static const createSavingTable =
   ''' create table if not exists saving (
         id integer primary key autoincrement,
-        price integer not null,
+        created_at text not null,
+        price real not null,
         target_id integer not null,
         constraint saving_target_fk foreign key (target_id) references target (id) on delete cascade
       )

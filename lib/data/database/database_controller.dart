@@ -13,7 +13,9 @@ abstract class IDatabase {
   Future<List<Target>?> getTargetsByCategory(int categoryId);
   Future<List<Cost>?> getCostsByCategory(int categoryId);
   Future<List<Saving>?> getSavingsByTarget(int targetId);
-  Future<int?> getAverageCostByDate();
+  Future<int?> getAverageDaysCost();
+  Future<int?> getAverageDaysSaving(int targetId);
+  Future<int?> getRequiredSaving(int targetId);
 }
 
 class DatabaseController {
@@ -51,7 +53,15 @@ class DatabaseController {
     return _implementationObject.getSavingsByTarget(targetId);
   }
 
-  Future<int?> getAverageCostByDate() async {
-    return _implementationObject.getAverageCostByDate();
+  Future<int?> getAverageDaysCost() async {
+    return _implementationObject.getAverageDaysCost();
+  }
+
+  Future<int?> getAverageDaysSaving(int targetId) async {
+    return _implementationObject.getAverageDaysSaving(targetId);
+  }
+
+  Future<int?> getRequiredSaving(int targetId) async {
+    return _implementationObject.getRequiredSaving(targetId);
   }
 }

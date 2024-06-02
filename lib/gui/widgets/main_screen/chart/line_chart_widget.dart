@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../../../data/entities/cost.dart';
+
 class LineChartWidget extends StatefulWidget {
-  const LineChartWidget({super.key});
+  const LineChartWidget({
+    super.key,
+    required this.costs,
+  });
+  final List<Cost> costs;
 
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
+
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
@@ -40,21 +47,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       series: [
         LineSeries(
           dataSource: [
-            {"x": DateTime.now().subtract(const Duration(days: 14)), "y": 1338},
-            {"x": DateTime.now().subtract(const Duration(days: 13)), "y": 3221},
-            {"x": DateTime.now().subtract(const Duration(days: 12)), "y": 2211},
-            {"x": DateTime.now().subtract(const Duration(days: 11)), "y": 7743},
-            {"x": DateTime.now().subtract(const Duration(days: 10)), "y": 1002},
-            {"x": DateTime.now().subtract(const Duration(days: 9)), "y": 698},
-            {"x": DateTime.now().subtract(const Duration(days: 8)), "y": 4825},
-            {"x": DateTime.now().subtract(const Duration(days: 7)), "y": 3332},
-            {"x": DateTime.now().subtract(const Duration(days: 6)), "y": 1023},
-            {"x": DateTime.now().subtract(const Duration(days: 5)), "y": 321},
-            {"x": DateTime.now().subtract(const Duration(days: 4)), "y": 1899},
-            {"x": DateTime.now().subtract(const Duration(days: 3)), "y": 5300},
-            {"x": DateTime.now().subtract(const Duration(days: 2)), "y": 2333},
-            {"x": DateTime.now().subtract(const Duration(days: 1)) , "y": 2222},
-            {"x": DateTime.now(), "y": 4692},
+            for (Cost cost in widget.costs)
+              {
+                "x": DateTime.parse(cost.createdAt),
+                "y": cost.price
+              }
           ],
           xValueMapper: (data, int index) {
             return data["x"];
@@ -86,4 +83,26 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       ),
     );
   }
+
+}
+
+Map<DateTime, int> getCostsSumByDay(List<Cost> costs) {
+  List<DateTime> dates = costs.map((cost) => DateTime.parse(cost.createdAt.substring(0, 10))).toSet().toList();
+  
+  Map<DateTime, int> data = {};
+  int costByDate = 0;
+
+  for (int i = 0; i < dates.length; i++) {
+    for (int j = 0; j < costs.length; j++) {
+      if (costs[j].createdAt.substring(0, 10) == dates[i].toString().substring(0, 10)) {
+        costByDate += costs[j].price;
+      }
+    }
+    data[dates[i]] = costByDate;
+    costByDate = 0;
+  }
+
+  print(data);
+
+  return data;
 }

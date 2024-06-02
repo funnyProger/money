@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_projects/data/entities/target.dart';
+import 'package:flutter_projects/gui/widgets/main_screen/add/saving/add_saving_list_item_widget.dart';
 
 
 class TargetsStatisticaWidget extends StatelessWidget {
-  const TargetsStatisticaWidget({super.key});
+  const TargetsStatisticaWidget({
+    super.key,
+    required this.targets,
+  });
+  final List<Target> targets;
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +67,9 @@ class TargetsStatisticaWidget extends StatelessWidget {
                           ),
                           Container(
                             alignment: Alignment.centerRight,
-                            child: const Text(
-                              "13",
-                              style: TextStyle(
+                            child: Text(
+                              "${targets.length}",
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                               ),
@@ -80,7 +86,7 @@ class TargetsStatisticaWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.only(right: 5),
                           child: const Text(
-                            "Сумма всех целей: ",
+                            "Общее накопление: ",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
@@ -89,9 +95,9 @@ class TargetsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "151340 руб.",
-                            style: TextStyle(
+                          child: Text(
+                            "${targets.fold(0, (previousValue, element) => previousValue + getSavingsSum(element))} / ${targets.fold(0, (previousValue, element) => previousValue + element.price.toInt())} руб.",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -109,7 +115,7 @@ class TargetsStatisticaWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.only(right: 5),
                           child: const Text(
-                            "Процент целей: ",
+                            "Общий процент продвижения: ",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
@@ -119,9 +125,9 @@ class TargetsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "83%",
-                            style: TextStyle(
+                          child: Text(
+                            "${targets.fold(0, (previousValue, element) => previousValue + (element.progress * 100).toInt())~/(targets.length)}%",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -147,9 +153,9 @@ class TargetsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "1400 руб.",
-                            style: TextStyle(
+                          child: Text(
+                            "${targets.fold(0, (previousValue, target) => previousValue + getSavingsSum(target)) ~/ targets.fold(0, (previousValue, target) => previousValue + target.savings.length)} руб.",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),
@@ -175,9 +181,9 @@ class TargetsStatisticaWidget extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: const Text(
-                            "15.12.2022",
-                            style: TextStyle(
+                          child: Text(
+                            targets.reduce((value, element) => DateTime.parse(value.lastDate).compareTo(DateTime.parse(element.lastDate)) > 0 ? value : element).lastDate.substring(0, 10),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 15,
                             ),

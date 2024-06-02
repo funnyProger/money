@@ -29,7 +29,7 @@ class _MainWidgetState extends State<MainWidget> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddWidget(tabIndex: context.read<DatabaseModel>().categories.isEmpty ? 1 : 0),
+                    builder: (context) => AddWidget(tabIndex: categories.isEmpty ? 1 : 0),
                   )
               );
             },
@@ -166,7 +166,7 @@ class _MainWidgetState extends State<MainWidget> {
                             child: Container(
                               alignment: Alignment.topLeft,
                               child: FutureBuilder<int?>(
-                                future: context.watch<DatabaseModel>().getAverageCostByDate(),
+                                future: context.watch<DatabaseModel>().getAverageDaysCost(),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
                                     if (snapshot.data == 0) {
@@ -202,39 +202,79 @@ class _MainWidgetState extends State<MainWidget> {
             body: [
               GridView.builder(
                 shrinkWrap: true,
-                padding: const EdgeInsets.only(left: 5, right: 5),
+                padding: const EdgeInsets.only(left: 5, right: 5, bottom: 93),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
-                itemCount: context.watch<DatabaseModel>().categories.length,
+                itemCount: categories.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return GridItemWidget(
-                    category: context.watch<DatabaseModel>().categories[index],
+                    category: categories[index],
                   );
                 },
               ),
             ],
           ) : SafeArea(
             child: Scaffold(
-              body: GridView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                ),
-                itemCount: context.watch<DatabaseModel>().categories.length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return GridItemWidget(
-                    category: context.watch<DatabaseModel>().categories[index],
-                  );
-                },
-              ),
+              body: Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            color: Colors.white,
+                            width: 0.6,
+                          ),
+                        )
+                    ),
+                    margin: EdgeInsets.only(
+                      left: 10,
+                      top: 20,
+                      right: 10,
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      top: 2,
+                      bottom: 3
+                    ),
+                    child: const Text(
+                      "Добавьте хотя бы одну покупку, чтобы появилась статистика категорий...",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                      softWrap: true,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 93),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
+                      ),
+                      itemCount: categories.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return GridItemWidget(
+                          category: categories[index],
+                        );
+                      },
+                    ),
+                  )
+                ],
+              )
             ),
           )
         ),

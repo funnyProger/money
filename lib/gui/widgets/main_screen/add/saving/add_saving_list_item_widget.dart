@@ -76,7 +76,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
                               child: Text(
-                                  "Прогресс: ${target.progress}%",
+                                  "Прогресс: ${(target.progress * 100).toInt()}%",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -108,7 +108,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                                 maxLines: 1,
                               ),
                               Text(
-                                "${getSum(target)} ₽",
+                                "${getSavingsSum(target)} ₽",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -127,7 +127,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 8),
                 child: LinearProgressIndicator(
-                  value: 0.5,
+                  value: target.progress,
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(100),
                 ),
@@ -140,12 +140,12 @@ class AddSavingListItemWidget extends StatelessWidget {
   }
 }
 
-int getSum(Target target) {
-  int sum = 0;
+int getSavingsSum(Target target) {
+  double sum = 0;
   for (var saving in target.savings) {
     sum += saving.price;
   }
-  return sum;
+  return sum.toInt();
 }
 
 String getCurrentDateTextForTarget(Target target) {
@@ -155,5 +155,15 @@ String getCurrentDateTextForTarget(Target target) {
     return "Статус: Завершено";
   } else {
     return "Прошло дней: ${DateTime.now().day - DateTime.parse(target.firstDate).day}/${DateTime.parse(target.lastDate).day} дн.";
+  }
+}
+
+String getPeriodForTargetInfo(Target target) {
+  if (DateTime.parse(target.firstDate).day - DateTime.now().day > 0) {
+    return "Ожидание";
+  } else if (DateTime.now().day - DateTime.parse(target.lastDate).day > 0) {
+    return "Завершено";
+  } else {
+    return "${DateTime.now().day - DateTime.parse(target.firstDate).day}/${DateTime.parse(target.lastDate).day} дн.";
   }
 }

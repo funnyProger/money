@@ -15,6 +15,24 @@ class CostInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            'main',
+            (Route<dynamic> route) => false,
+          );
+        },
+        backgroundColor: Colors.blueAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: const Icon(
+          Icons.home,
+          color: Colors.white,
+        ),
+      ),
       body: Container(
         padding: const EdgeInsets.only(top: 43),
         child: Column(

@@ -74,7 +74,7 @@ class TargetListItemWidget extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
-                                "Прогресс: ${(100 * target.progress).toInt()}%",
+                                "Прогресс: ${(100 * target.progress).toInt() >= 100 ? 100 : (100 * target.progress).toInt()}%",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,

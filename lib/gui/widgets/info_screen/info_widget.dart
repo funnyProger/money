@@ -102,15 +102,19 @@ class _InfoWidgetState extends State<InfoWidget>
             padding: const EdgeInsets.only(right: 16, bottom: 16),
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).clearSnackBars();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  'main',
+                      (Route<dynamic> route) => false,
+                );
               },
               backgroundColor: Colors.blueAccent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ),
               child: const Icon(
-                Icons.arrow_back,
+                Icons.home,
                 color: Colors.white,
               ),
             ),

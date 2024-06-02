@@ -76,7 +76,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 8),
                               child: Text(
-                                  "Прогресс: ${(target.progress * 100).toInt()}%",
+                                  "Прогресс: ${(100 * target.progress).toInt() >= 100 ? 100 : (100 * target.progress).toInt()}%",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -89,12 +89,12 @@ class AddSavingListItemWidget extends StatelessWidget {
                         )
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 15,
                       child: Container(
                           alignment: Alignment.topRight,
                           padding: const EdgeInsets.only(right: 8),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const Text(
@@ -108,7 +108,7 @@ class AddSavingListItemWidget extends StatelessWidget {
                                 maxLines: 1,
                               ),
                               Text(
-                                "${getSavingsSum(target)} ₽",
+                                "${getSavingsSum(target)}/${target.price.toInt()} ₽",
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,

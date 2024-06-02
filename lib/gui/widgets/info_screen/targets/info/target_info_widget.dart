@@ -32,6 +32,24 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            'main',
+                (Route<dynamic> route) => false,
+          );
+        },
+        backgroundColor: Colors.blueAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: const Icon(
+          Icons.home,
+          color: Colors.white,
+        ),
+      ),
       body: Container(
         padding: const EdgeInsets.only(top: 43),
         child: Column(
@@ -64,6 +82,7 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
               flex: 1,
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 90),
                 child: Column(
                   children: [
                     Container(
@@ -73,7 +92,7 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                           width: double.infinity,
                           interactive: false,
                           height: 300,
-                          progress: widget.target.progress * 100,
+                          progress: widget.target.progress * 100 > 100 ? 100 : widget.target.progress * 100,
                           barWidth: 8,
                           startAngle: 45,
                           sweepAngle: 270,
@@ -322,7 +341,9 @@ class _TargetInfoWidgetState extends State<TargetInfoWidget> {
                                   Container(
                                     alignment: Alignment.centerRight,
                                     child: Text(
-                                      "${widget.target.firstDate.substring(0, 10)}  -  ${widget.target.lastDate.substring(0, 10)} (${DateTime.parse(widget.target.lastDate.substring(0, 10)).difference(DateTime.parse(widget.target.firstDate.substring(0, 10))).inDays} дн.)",
+                                      "${widget.target.firstDate.substring(0, 10)}  -  ${widget.target.lastDate.substring(0, 10)} "
+                                          "(${DateTime.parse(widget.target.lastDate.substring(0, 10))
+                                          .difference(DateTime.parse(widget.target.firstDate.substring(0, 10))).inDays} дн.)",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,

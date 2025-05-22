@@ -1,7 +1,6 @@
 ____
 
-# __Developer__: 
-Трегубов Богдан
+# __Developer__: Трегубов Богдан
 
 # __Project name__: Money
 

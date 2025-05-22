@@ -25,7 +25,7 @@ ____
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/31ad5b4b-e6db-40df-ae83-a34d17450db9?raw=true" alt="Sublime's custom image height="150""/>
-  <img src="https://github.com/user-attachments/assets/0ee844e8-e371-48b6-a5a1-c566559ecc7d?raw=true" alt="Sublime's custom image height="150"/>
+  <img src="https://github.com/user-attachments/assets/0ee844e8-e371-48b6-a5a1-c566559ecc7d?raw=true" alt="Sublime's custom image height="250"/>
   <img src="https://github.com/user-attachments/assets/c456b152-4a49-42fc-8115-3403bb06aa0f?raw=true" alt="Sublime's custom image height="150"/>
 </p>
 

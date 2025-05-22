@@ -92,9 +92,9 @@ ____
   Здесь пользователь может посмотреть список своих целей и краткую информации по каждой из них. При нажатии на категорию, пользователь попадает на экран подробной информации о категории. При нажатии на «Посмотреть статистику накоплений» пользователь попадает на экран со всем своими накоплениями в этой цели.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/6a8c37d0-a1c1-4748-a787-96aefa87fc77?raw=true" alt="Sublime's custom image"/>
-  <img src="https://github.com/user-attachments/assets/60f01c05-9f59-4e57-9408-363e6aefea8c?raw=true" alt="Sublime's custom image"/>
-  <img src="https://github.com/user-attachments/assets/195915d4-c3af-46c3-8dbd-408e0d9c92e7?raw=true" alt="Sublime's custom image"/>
+  <img src="https://github.com/user-attachments/assets/6a8c37d0-a1c1-4748-a787-96aefa87fc77?raw=true" alt="Sublime's custom image height="150"/>
+  <img src="https://github.com/user-attachments/assets/60f01c05-9f59-4e57-9408-363e6aefea8c?raw=true" alt="Sublime's custom image height="150"/>
+  <img src="https://github.com/user-attachments/assets/195915d4-c3af-46c3-8dbd-408e0d9c92e7?raw=true" alt="Sublime's custom image height="150"/>
 </p>
 
 

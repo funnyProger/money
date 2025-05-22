@@ -24,9 +24,9 @@ ____
  	Здесь пользователь может создать категорию для отслеживания каких-то затрат и добавления накоплений. Для категории можно задать цвет, имя и описание.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/31ad5b4b-e6db-40df-ae83-a34d17450db9?raw=true" alt="Sublime's custom image height="150""/>
-  <img src="https://github.com/user-attachments/assets/0ee844e8-e371-48b6-a5a1-c566559ecc7d?raw=true" alt="Sublime's custom image height="250"/>
-  <img src="https://github.com/user-attachments/assets/c456b152-4a49-42fc-8115-3403bb06aa0f?raw=true" alt="Sublime's custom image height="150"/>
+  <img src="https://github.com/user-attachments/assets/31ad5b4b-e6db-40df-ae83-a34d17450db9?raw=true" alt="Sublime's custom image""/>
+  <img src="https://github.com/user-attachments/assets/0ee844e8-e371-48b6-a5a1-c566559ecc7d?raw=true" alt="Sublime's custom image"/>
+  <img src="https://github.com/user-attachments/assets/c456b152-4a49-42fc-8115-3403bb06aa0f?raw=true" alt="Sublime's custom image"/>
 </p>
 
 
@@ -92,9 +92,12 @@ ____
   Здесь пользователь может посмотреть список своих целей и краткую информации по каждой из них. При нажатии на категорию, пользователь попадает на экран подробной информации о категории. При нажатии на «Посмотреть статистику накоплений» пользователь попадает на экран со всем своими накоплениями в этой цели.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/6a8c37d0-a1c1-4748-a787-96aefa87fc77?raw=true" alt="Sublime's custom image height="150"/>
-  <img src="https://github.com/user-attachments/assets/60f01c05-9f59-4e57-9408-363e6aefea8c?raw=true" alt="Sublime's custom image height="150"/>
-  <img src="https://github.com/user-attachments/assets/195915d4-c3af-46c3-8dbd-408e0d9c92e7?raw=true" alt="Sublime's custom image height="150"/>
+  <img src="https://github.com/user-attachments/assets/6a8c37d0-a1c1-4748-a787-96aefa87fc77?raw=true" alt="Sublime's custom image"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/195915d4-c3af-46c3-8dbd-408e0d9c92e7?raw=true" alt="Sublime's custom image"/>
+  <img src="https://github.com/user-attachments/assets/60f01c05-9f59-4e57-9408-363e6aefea8c?raw=true" alt="Sublime's custom image"/>
 </p>
 
 

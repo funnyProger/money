@@ -82,8 +82,8 @@ ____
   При нажатии на главном экране на добавленную пользователем категорию, он попадает на экран подробной информации о категории. Сначала у него отображается экран покупок, где выводится писок всех его покупок. Нажав на покупку, пользователь попадает на экран информации о покупке.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c7374465-b726-4cbd-b7f5-ee72cf65cdf9?raw=true" alt="Sublime's custom image" height="500"/>
-  <img src="https://github.com/user-attachments/assets/0a06f532-0390-4861-a8cf-926d783fa641?raw=true" alt="Sublime's custom image" height="500"/>
+  <img src="https://github.com/user-attachments/assets/c7374465-b726-4cbd-b7f5-ee72cf65cdf9?raw=true" alt="Sublime's custom image" height="900"/>
+  <img src="https://github.com/user-attachments/assets/0a06f532-0390-4861-a8cf-926d783fa641?raw=true" alt="Sublime's custom image" height="900"/>
 </p>
 
 
